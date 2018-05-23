@@ -28,7 +28,7 @@ In addition, this project will include:
 
 This app will consist of a single screen with game board, game controls, and nav links to the Github, my LinkedIn, and my personal webpage.  Game controls will include Start, Reset.
 
-![wireframes](https://imgur.com/a/Gkvq11E.png)
+![wireframes](https://i.imgur.com/Xj5bFKV.png)
 
 ### Architecture and Technologies
 
