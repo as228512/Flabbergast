@@ -37,35 +37,25 @@ This app will consist of a single screen with game board, game controls, and nav
 This project will be implemented with the following technologies:
 
 - `JavaScript` for game logic,
-- `Foo.js` with `HTML5 Baz` for effects rendering,
-- `Browserify` to bundle js files.
+- `Canvas` for effects rendering,
+- `Webpack` to bundle js files.
 
-In addition to the entry file, there will be three scripts involved in this project:
+In addition to the entry file, there will be two scripts involved in this project:
 
-`board.js`: this script will handle the logic for creating and updating the necessary `Foo.js` elements and rendering them to the DOM.
+`board.js`: this script will handle the logic for creating and updating the necessary `letter.js` elements and rendering them to the DOM.
 
-`automata.js`: this script will handle the logic behind the scenes.  An Automata object will hold a `type` (hexagon, triangle, or square) and a 2D array of `Cell`s.  It will be responsible for doing neighbor checks for each `Cell` upon iteration and updating the `Cell` array appropriately.
-
-`cell.js`: this lightweight script will house the constructor and update functions for the `Cell` objects.  Each `Cell` will contain a `type` (hexagon, triangle, or square) and an `aliveState` (`true` or `false`).
+`tile.js`: this script will handle the logic behind the scenes.  An letter object will hold a `type` (letter) and a 2D array of `rows`s.
 
 ### Implementation Timeline
 
-**Day 1**: Setup all necessary Node modules, including getting webpack up and running and `Foo.js` installed. Write a basic entry file and the bare bones of all 3 scripts outlined above.  Learn the basics of `Foo.js`.  Goals for the day:
+**Day 1**: Setup all necessary Node modules, including getting webpack up and running. Write a basic entry file and the bare bones of the 2 scripts outlined above.  Learn the basics of `canvas`.  Goals for the day:
 
-- Get a green bundle with `Browserify`
-- Learn enough `Foo.js` to render an object to the `HTML5 Baz` element
+- Get a green bundle with `Webpack`
+- Learn enough to render an object to the `HTML5 canvas` element
 
-**Day 2**: Dedicate this day to learning the `Foo.js` API.  First, build out the `Cell` object to connect to the `Board` object.  Then, use `board.js` to create and render at least the square grid, ideally all 3 grid types.  Build in the ability to toggle the live/dead states on click for each cell.  Goals for the day:
+**Day 2**: TBD
 
-- Complete the `cell.js` module (constructor, update functions)
-- Render a square grid to the `HTML5 Baz` using `Foo.js`
-- Make each cell in the grid clickable, toggling the state of the square on click
-- Do the same for triangular and hexagonal grids
-
-**Day 3**: Create the automata logic backend.  Build out modular functions for handling the different grid types along with their unique neighbor checks and rule sets.  Incorporate the automata logic into the `Board.js` rendering.  Goals for the day:
-
-- Export an `Automata` object with correct type and handling logic
-- Have a functional grid on the `HTML Baz` frontend that correctly handles iterations from one generation of the game to the next
+**Day 3**: TBD
 
 
 **Day 4**: Install the controls for the user to interact with the game.  Style the frontend, making it polished and professional.  Goals for the day:
