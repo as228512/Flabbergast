@@ -45,21 +45,3 @@ In addition to the entry file, there will be two scripts involved in this projec
 `board.js`: this script will handle the logic for creating and updating the necessary `letter.js` elements and rendering them to the DOM.
 
 `tile.js`: this script will handle the logic behind the scenes.  A grid object will hold a `type` (letter) and a 2D array of `rows`s.
-
-### Implementation Timeline
-
-**Day 1**: Setup all necessary Node modules, including getting webpack up and running. Write a basic entry file and the bare bones of the 2 scripts outlined above.  Learn the basics of `canvas`.  Goals for the day:
-
-- Get a green bundle with `Webpack`
-- Learn enough to render an object to the `HTML5 canvas` element
-
-**Day 2**: Build the tile objects to populate the board. Get the board/grid to render on the page.
-
-**Day 3**: Flesh out the logic for the tiles and tie it into the board to be rendered. Have a somewhat functional game.
-
-
-**Day 4**: Install the controls for the user to interact with the game.  Style the frontend, making it polished and professional.  Goals for the day:
-
-- Create controls for start, reset
-- Have a styled interface, nice looking controls and title
-- General debugging
