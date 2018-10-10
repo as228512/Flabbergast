@@ -34,10 +34,16 @@ body {
   text-align: center;
   margin-top: 100px;
   padding: 5px;
+}
 
+.logo-ctr h1 {
   background: -webkit-linear-gradient(#6e6161, rgba(254,254,254,1));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+button:focus, input[type="button"]:focus {
+    outline: none;
 }
 
 .start-bar-ctr {
@@ -65,7 +71,7 @@ body {
 }
 
 #start-button {
-  font-size: 12px;
+  font-size: 16px;
   letter-spacing: 2px;
   font-weight: 700;
   width: 100px;
@@ -130,7 +136,7 @@ body {
   width: 65px;
   cursor: pointer;
   border: 2px solid;
-  border-image: inherit;
+  border-radius: 4px;
   background: rgb(226,226,226); /* Old browsers */
   background: -moz-linear-gradient(top, rgba(226,226,226,1) 0%, rgba(132,132,132,1) 11%, rgba(196,196,196,1) 76%, rgba(254,254,254,1) 99%); /* FF3.6-15 */
   background: -webkit-linear-gradient(top, rgba(226,226,226,1) 0%,rgba(132,132,132,1) 11%,rgba(196,196,196,1) 76%,rgba(254,254,254,1) 99%); /* Chrome10-25,Safari5.1-6 */
