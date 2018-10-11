@@ -81,16 +81,6 @@ button:focus, input[type="button"]:focus {
   border-image: inherit;
 }
 
-.current-word {
-  margin-top: 10px;
-  height: 30px;
-  width: 300px;
-  background-color: #390b00e0;
-  border: 2px solid rgb(226,226,226);
-  border-image: inherit;
-  text-align: center;
-}
-
 .game-ctr {
   display: flex;
   margin-top: 10px;
@@ -103,6 +93,20 @@ button:focus, input[type="button"]:focus {
   border-image: inherit;
   text-align: center;
   justify-content: space-around;
+}
+
+.middle-game-cntr {
+  border-image: inherit;
+}
+
+.current-word {
+  margin-top: 50px;
+  height: 45px;
+  width: 300px;
+  border: 2px solid rgb(226,226,226);
+  background-color: #390b008f;
+  border-image: inherit;
+  text-align: center;
 }
 
 .instructions, .sub-words {
@@ -120,7 +124,7 @@ button:focus, input[type="button"]:focus {
   height: 302px;
   width: 300px;
   justify-content: space-between;
-  margin-top: 100px;
+  margin-top: 50px;
   border-image: inherit;
 }
 
