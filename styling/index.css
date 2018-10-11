@@ -5,8 +5,9 @@ html {
 }
 
 body {
+  background-position-y: -130px;
+  background-position-x: -22px;
   background-image: url("./static_images/background.jpg");
-  background-size: cover;
   background-repeat: no-repeat;
   align-items: center;
   display: flex;
@@ -83,7 +84,7 @@ button:focus, input[type="button"]:focus {
 
 .game-ctr {
   display: flex;
-  margin-top: 10px;
+  margin-top: 12.5px;
   height: 500px;
   width: 1000px;
   background-color: #390b008f;
@@ -99,14 +100,23 @@ button:focus, input[type="button"]:focus {
   border-image: inherit;
 }
 
-.current-word {
+.current-word-cntr {
   margin-top: 50px;
-  height: 45px;
+  min-height: 46px;
   width: 300px;
   border: 2px solid rgb(226,226,226);
   background-color: #390b008f;
   border-image: inherit;
   text-align: center;
+}
+
+.current-word h2 {
+  padding: 8px;
+  font-size: 30px;
+  letter-spacing: 3px;
+  background: -webkit-linear-gradient(#6e6161, rgba(254,254,254,1));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .instructions, .sub-words {
