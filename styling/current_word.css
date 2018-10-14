@@ -1,0 +1,30 @@
+/* .current-word-cntr {
+  padding: 10px;
+}
+
+.current-word-cntr h2 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  background: -webkit-linear-gradient(#6e6161, rgba(254, 254, 254, 1));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+} */
+
+.current-word-cntr {
+  margin-top: 50px;
+  width: 300px;
+  border: 2px solid rgb(226, 226, 226);
+  background-color: #390b008f;
+  border-image: inherit;
+  text-align: center;
+}
+
+.current-word-cntr h2 {
+  padding: 8px;
+  font-size: 28px;
+  letter-spacing: 2px;
+  background: -webkit-linear-gradient(#6e6161, rgba(254, 254, 254, 1));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
