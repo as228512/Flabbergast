@@ -84,7 +84,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.startReset = undefined;
+exports.playGame = exports.startReset = undefined;
 
 var _tile = __webpack_require__(/*! ./tile.js */ "./lib/tile.js");
 
@@ -96,12 +96,16 @@ var startReset = exports.startReset = function startReset() {
   document.getElementById("start-button").onclick = function () {
     (0, _tile.createTiles)();
     toggleStartButton("start");
-
-    document.querySelectorAll("#tiles li").forEach(function (li) {
-      li.addEventListener("mouseover", _tile.toggleTileActivation);
-      li.addEventListener("mouseout", _tile.toggleTileActivation);
-    });
+    playGame();
   };
+};
+
+var playGame = exports.playGame = function playGame() {
+  document.querySelectorAll("#tiles li").forEach(function (li) {
+    li.addEventListener("mouseover", _tile.toggleTileActivation);
+    li.addEventListener("mouseout", _tile.toggleTileActivation);
+    li.addEventListener("click", _tile.formWord);
+  });
 };
 
 /***/ }),
@@ -175,7 +179,17 @@ var createTiles = exports.createTiles = function createTiles() {
 var toggleTileActivation = exports.toggleTileActivation = function toggleTileActivation(e) {
   var li = e.target;
 
-  if (li.className === "false") li.className = "focused";else li.className = "false";
+  if (li.className === "false") li.className = "focused";else if (li.className === "focused") li.className = "false";
+};
+
+var formWord = exports.formWord = function formWord(e) {
+  var li = e.target;
+
+  debugger;
+
+  document.getElementById("current-word-text").innerHTML += "" + li.innerHTML;
+
+  debugger;
 };
 
 /***/ })
