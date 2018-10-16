@@ -84,7 +84,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.startReset = undefined;
+exports.toggleStartButton = exports.startReset = undefined;
 
 var _tile = __webpack_require__(/*! ./tile */ "./lib/tile.js");
 
@@ -106,7 +106,7 @@ var startReset = exports.startReset = function startReset() {
   };
 };
 
-var toggleStartButton = function toggleStartButton(requestType) {
+var toggleStartButton = exports.toggleStartButton = function toggleStartButton(requestType) {
   requestType === "start" ? document.getElementById("start-button").innerHTML = "Reset" : document.getElementById("start-button").innerHTML = "Start";
 };
 
@@ -222,6 +222,10 @@ var clearWord = exports.clearWord = function clearWord(e) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.tickTimer = exports.resetTimer = exports.stopTimer = exports.startTimer = undefined;
+
+var _board = __webpack_require__(/*! ./board */ "./lib/board.js");
+
 var timerIntervalId = void 0;
 var startTimer = exports.startTimer = function startTimer() {
   timerIntervalId = setInterval(tickTimer, 1000);
@@ -239,10 +243,9 @@ var resetTimer = exports.resetTimer = function resetTimer() {
 var tickTimer = exports.tickTimer = function tickTimer() {
   var time = Number(document.getElementsByClassName("timer")[0].innerHTML.replace(/[^\d]/g, ""));
 
-  console.log(time);
-
   if (time === 0) {
     stopTimer();
+    (0, _board.toggleStartButton)();
     return;
   }
 
