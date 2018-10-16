@@ -84,28 +84,39 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.playGame = exports.startReset = undefined;
+exports.startReset = undefined;
 
-var _tile = __webpack_require__(/*! ./tile.js */ "./lib/tile.js");
+var _tile = __webpack_require__(/*! ./tile */ "./lib/tile.js");
+
+var Tile = _interopRequireWildcard(_tile);
+
+var _timer = __webpack_require__(/*! ./timer */ "./lib/timer.js");
+
+var Timer = _interopRequireWildcard(_timer);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+var startReset = exports.startReset = function startReset() {
+  document.getElementById("start-button").onclick = function () {
+    Timer.resetTimer();
+    Tile.clearWord();
+    Tile.createTiles();
+    toggleStartButton("start");
+    activateGame();
+  };
+};
 
 var toggleStartButton = function toggleStartButton(requestType) {
   requestType === "start" ? document.getElementById("start-button").innerHTML = "Reset" : document.getElementById("start-button").innerHTML = "Start";
 };
 
-var startReset = exports.startReset = function startReset() {
-  document.getElementById("start-button").onclick = function () {
-    (0, _tile.clearWord)();
-    (0, _tile.createTiles)();
-    toggleStartButton("start");
-    playGame();
-  };
-};
+var activateGame = function activateGame() {
+  Timer.startTimer();
 
-var playGame = exports.playGame = function playGame() {
   document.querySelectorAll("#tiles li").forEach(function (li) {
-    li.addEventListener("mouseover", _tile.toggleTileActivation);
-    li.addEventListener("mouseout", _tile.toggleTileActivation);
-    li.addEventListener("click", _tile.formWord);
+    li.addEventListener("mouseover", Tile.toggleTileActivation);
+    li.addEventListener("mouseout", Tile.toggleTileActivation);
+    li.addEventListener("click", Tile.formWord);
   });
 };
 
@@ -149,7 +160,7 @@ var sample = function sample(array) {
   return array[Math.floor(Math.random() * array.length)];
 };
 
-var tiles = exports.tiles = {
+var tiles = {
   1: ["R", "I", "F", "O", "B", "X"],
   2: ["I", "F", "E", "H", "E", "Y"],
   3: ["D", "E", "N", "O", "W", "S"],
@@ -194,6 +205,50 @@ var formWord = exports.formWord = function formWord(e) {
 
 var clearWord = exports.clearWord = function clearWord(e) {
   document.getElementById("current-word-text").innerHTML = "";
+};
+
+/***/ }),
+
+/***/ "./lib/timer.js":
+/*!**********************!*\
+  !*** ./lib/timer.js ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var timerIntervalId = void 0;
+var startTimer = exports.startTimer = function startTimer() {
+  timerIntervalId = setInterval(tickTimer, 1000);
+};
+
+var stopTimer = exports.stopTimer = function stopTimer() {
+  clearInterval(timerIntervalId);
+};
+
+var resetTimer = exports.resetTimer = function resetTimer() {
+  stopTimer();
+  document.getElementsByClassName("timer")[0].innerHTML = "Time: 90";
+};
+
+var tickTimer = exports.tickTimer = function tickTimer() {
+  var time = Number(document.getElementsByClassName("timer")[0].innerHTML.replace(/[^\d]/g, ""));
+
+  console.log(time);
+
+  if (time === 0) {
+    stopTimer();
+    return;
+  }
+
+  time--;
+
+  document.getElementsByClassName("timer")[0].innerHTML = "Time: " + time;
 };
 
 /***/ })
