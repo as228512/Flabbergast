@@ -112,12 +112,7 @@ var toggleStartButton = exports.toggleStartButton = function toggleStartButton(r
 
 var activateGame = function activateGame() {
   Timer.startTimer();
-
-  document.querySelectorAll("#tiles li").forEach(function (li) {
-    li.addEventListener("mouseover", Tile.toggleTileActivation);
-    li.addEventListener("mouseout", Tile.toggleTileActivation);
-    li.addEventListener("click", Tile.formWord);
-  });
+  Tile.activateTiles();
 };
 
 /***/ }),
@@ -156,6 +151,15 @@ document.addEventListener("DOMContentLoaded", function () {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.clearWord = exports.formWord = exports.toggleTileSelection = exports.toggleTileActivation = exports.activateTiles = exports.createTiles = undefined;
+
+var _word = __webpack_require__(/*! ./word */ "./lib/word.js");
+
+var _word2 = _interopRequireDefault(_word);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var word;
 var sample = function sample(array) {
   return array[Math.floor(Math.random() * array.length)];
 };
@@ -188,24 +192,141 @@ var createTiles = exports.createTiles = function createTiles() {
   }
 };
 
+var activateTiles = exports.activateTiles = function activateTiles() {
+  document.querySelectorAll("#tiles li").forEach(function (li) {
+    li.addEventListener("mouseover", toggleTileActivation);
+    li.addEventListener("mouseout", toggleTileActivation);
+    li.addEventListener("click", formWord);
+  });
+};
+
 var toggleTileActivation = exports.toggleTileActivation = function toggleTileActivation(e) {
   var li = e.target;
 
   if (li.className === "false") li.className = "focused";else if (li.className === "focused") li.className = "false";
 };
 
-var formWord = exports.formWord = function formWord(e) {
+var toggleTileSelection = exports.toggleTileSelection = function toggleTileSelection(e) {
   var li = e.target;
-  var currentWordText = document.getElementById("current-word-text").innerHTML;
 
-  currentWordText === "" ? currentWordText += "" + li.innerHTML : currentWordText += "" + li.innerHTML.toLowerCase();
+  debugger;
 
-  document.getElementById("current-word-text").innerHTML = currentWordText;
+  if (word.isValid(li)) {
+    word.letterNodes.forEach(function (node) {
+      node.className = "selected";
+    });
+
+    var currentWordText = word.letterNodes.map(function (letterNode) {
+      return letterNode.innerHTML;
+    });
+
+    document.getElementById("current-word-text").innerHTML = currentWordText.join("");
+
+    // if (li.className === "focused") li.className = "false";
+    // else if (li.className === "false") li.className = "selected";
+  }
 };
+
+////
+////
+////
+////
+////
+var formWord = exports.formWord = function formWord(e) {
+  var currentWordField = document.getElementById("current-word-text");
+
+  //handles cases for user's first selection
+  if (currentWordField.innerHTML === "") {
+    var firstLetterNode = e.target;
+    firstLetterNode.className = "selected";
+    word = new _word2.default();
+    word.add(firstLetterNode);
+    currentWordField.innerHTML = word.letterNodes[0].innerHTML;
+  }
+
+  //toggles further selection highlighting
+  document.querySelectorAll("#tiles li").forEach(function (li) {
+    li.removeEventListener("mouseover", toggleTileActivation);
+    li.removeEventListener("mouseout", toggleTileActivation);
+    li.addEventListener("mouseover", toggleTileSelection);
+    // li.addEventListener("mouseout", toggleTileSelection);
+  });
+
+  // const li = e.target;
+  //
+  // if (word.isValid(li)) {
+  // }
+  //
+  // let currentWordText = document.getElementById("current-word-text").innerHTML;
+  //
+  // currentWordText === ""
+  //   ? (currentWordText += `${li.innerHTML}`)
+  //   : (currentWordText += `${li.innerHTML.toLowerCase()}`);
+  //
+  // document.getElementById("current-word-text").innerHTML = currentWordText;
+};
+
+//   let firstLetter = e.target;
+//   firstLetter.className = "selected";
+//
+//   document.querySelectorAll("#tiles li").forEach(li => {
+//     li.removeEventListener("mouseover", toggleTileActivation);
+//     li.removeEventListener("mouseout", toggleTileActivation);
+//     li.addEventListener("mouseover", toggleTileSelection);
+//     li.addEventListener("mouseout", toggleTileSelection);
+//   });
+//
+//   const li = e.target;
+//
+//   let currentWordText = document.getElementById("current-word-text").innerHTML;
+//
+//   currentWordText === ""
+//     ? (currentWordText += `${li.innerHTML}`)
+//     : (currentWordText += `${li.innerHTML.toLowerCase()}`);
+//
+//   document.getElementById("current-word-text").innerHTML = currentWordText;
+// };
+
+////
+////
+////
+////
+////
 
 var clearWord = exports.clearWord = function clearWord(e) {
   document.getElementById("current-word-text").innerHTML = "";
 };
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /***/ }),
 
@@ -253,6 +374,84 @@ var tickTimer = exports.tickTimer = function tickTimer() {
 
   document.getElementsByClassName("timer")[0].innerHTML = "Time: " + time;
 };
+
+/***/ }),
+
+/***/ "./lib/word.js":
+/*!*********************!*\
+  !*** ./lib/word.js ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Word = function () {
+  function Word() {
+    _classCallCheck(this, Word);
+
+    this.letterNodes = [];
+  }
+
+  _createClass(Word, [{
+    key: "isValid",
+    value: function isValid(letterNode) {
+      var lastLetterNode = this.letterNodes[this.letterNodes.length - 1];
+      var isSibling = this.isNextTo(letterNode, lastLetterNode);
+      var isSelf = this.isSelf(letterNode);
+
+      if (isSelf) return true;else if (!lastLetterNode || isSibling) {
+        this.add(letterNode);
+        return true;
+      } else return false;
+    }
+  }, {
+    key: "isNextTo",
+    value: function isNextTo(letterNode, lastLetterNode) {
+      if (!lastLetterNode) return;
+
+      var differential = letterNode.value - lastLetterNode.value;
+      var siblingNodeDifferentials = [-5, -4, -3, -1, 1, 3, 4, 5];
+
+      if (siblingNodeDifferentials.includes(differential)) return true;else return false;
+    }
+  }, {
+    key: "isSelf",
+    value: function isSelf(letterNode) {
+      var currentWord = this.letterNodes;
+      var result = false;
+
+      for (var i = 0; i < currentWord.length; i++) {
+        if (currentWord[i].value === letterNode.value) {
+          var backTrackedWord = currentWord.slice(0, i + 1);
+          this.letterNodes = backTrackedWord;
+          result = true;
+          break;
+        }
+      }
+
+      return result;
+    }
+  }, {
+    key: "add",
+    value: function add(letterNode) {
+      this.letterNodes.push(letterNode);
+    }
+  }]);
+
+  return Word;
+}();
+
+exports.default = Word;
 
 /***/ })
 
