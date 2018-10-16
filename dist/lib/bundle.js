@@ -94,6 +94,7 @@ var toggleStartButton = function toggleStartButton(requestType) {
 
 var startReset = exports.startReset = function startReset() {
   document.getElementById("start-button").onclick = function () {
+    (0, _tile.clearWord)();
     (0, _tile.createTiles)();
     toggleStartButton("start");
     playGame();
@@ -184,12 +185,15 @@ var toggleTileActivation = exports.toggleTileActivation = function toggleTileAct
 
 var formWord = exports.formWord = function formWord(e) {
   var li = e.target;
+  var currentWordText = document.getElementById("current-word-text").innerHTML;
 
-  debugger;
+  currentWordText === "" ? currentWordText += "" + li.innerHTML : currentWordText += "" + li.innerHTML.toLowerCase();
 
-  document.getElementById("current-word-text").innerHTML += "" + li.innerHTML;
+  document.getElementById("current-word-text").innerHTML = currentWordText;
+};
 
-  debugger;
+var clearWord = exports.clearWord = function clearWord(e) {
+  document.getElementById("current-word-text").innerHTML = "";
 };
 
 /***/ })
