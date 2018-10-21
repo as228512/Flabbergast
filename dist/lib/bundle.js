@@ -422,7 +422,7 @@ var Word = function () {
       var standardNodeDifferentials = [-5, -4, -3, -1, 1, 3, 4, 5];
       var cornerNodeDifferentials = {
         1: [1, 4, 5],
-        4: [-1, 3, 5],
+        4: [-1, 3, 4],
         13: [-4, -3, 1],
         16: [-1, -4, -5]
       };
