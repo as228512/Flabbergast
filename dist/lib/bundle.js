@@ -249,7 +249,6 @@ var formWord = exports.formWord = function formWord(e) {
     li.removeEventListener("mouseover", toggleTileActivation);
     li.removeEventListener("mouseout", toggleTileActivation);
     li.addEventListener("mouseover", toggleTileSelection);
-    // li.addEventListener("mouseout", toggleTileSelection);
   });
 
   // const li = e.target;
@@ -409,7 +408,9 @@ var Word = function () {
       var isSibling = this.isNextTo(letterNode, lastLetterNode);
       var isSelf = this.isSelf(letterNode);
 
-      if (isSelf) return true;else if (!lastLetterNode || isSibling) {
+      debugger;
+
+      if (isSelf) return true;else if (isSibling) {
         this.add(letterNode);
         return true;
       } else return false;
@@ -417,12 +418,26 @@ var Word = function () {
   }, {
     key: "isNextTo",
     value: function isNextTo(letterNode, lastLetterNode) {
-      if (!lastLetterNode) return;
+      // if (!lastLetterNode) return;
+      var standardNodeDifferentials = [-5, -4, -3, -1, 1, 3, 4, 5];
+      var cornerNodeDifferentials = {
+        1: [1, 4, 5],
+        4: [-1, 3, 5],
+        13: [-4, -3, 1],
+        16: [-1, -4, -5]
+      };
 
       var differential = letterNode.value - lastLetterNode.value;
-      var siblingNodeDifferentials = [-5, -4, -3, -1, 1, 3, 4, 5];
 
-      if (siblingNodeDifferentials.includes(differential)) return true;else return false;
+      var isCornerNode = cornerNodeDifferentials[lastLetterNode.value] ? true : false;
+
+      if (isCornerNode) {
+        if (cornerNodeDifferentials[lastLetterNode.value].includes(differential)) {
+          return true;
+        }
+      } else if (standardNodeDifferentials.includes(differential)) return true;
+
+      return false;
     }
   }, {
     key: "isSelf",
