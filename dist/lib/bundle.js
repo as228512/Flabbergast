@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function () {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.clearWord = exports.formWord = exports.toggleTileSelection = exports.toggleTileActivation = exports.activateTiles = exports.createTiles = undefined;
+exports.clearWord = exports.submitWord = exports.formWord = exports.deSelectTiles = exports.tileSelection = exports.toggleTileActivation = exports.activateTiles = exports.createTiles = undefined;
 
 var _word = __webpack_require__(/*! ./word */ "./lib/word.js");
 
@@ -159,7 +159,6 @@ var _word2 = _interopRequireDefault(_word);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var word;
 var sample = function sample(array) {
   return array[Math.floor(Math.random() * array.length)];
 };
@@ -206,10 +205,8 @@ var toggleTileActivation = exports.toggleTileActivation = function toggleTileAct
   if (li.className === "false") li.className = "focused";else if (li.className === "focused") li.className = "false";
 };
 
-var toggleTileSelection = exports.toggleTileSelection = function toggleTileSelection(e) {
+var tileSelection = exports.tileSelection = function tileSelection(e) {
   var li = e.target;
-
-  debugger;
 
   if (word.isValid(li)) {
     word.letterNodes.forEach(function (node) {
@@ -221,10 +218,13 @@ var toggleTileSelection = exports.toggleTileSelection = function toggleTileSelec
     });
 
     document.getElementById("current-word-text").innerHTML = currentWordText.join("");
-
-    // if (li.className === "focused") li.className = "false";
-    // else if (li.className === "false") li.className = "selected";
   }
+};
+
+var deSelectTiles = exports.deSelectTiles = function deSelectTiles(nodeArray) {
+  nodeArray.forEach(function (tile) {
+    tile.className = "false";
+  });
 };
 
 ////
@@ -232,67 +232,43 @@ var toggleTileSelection = exports.toggleTileSelection = function toggleTileSelec
 ////
 ////
 ////
+var word;
 var formWord = exports.formWord = function formWord(e) {
   var currentWordField = document.getElementById("current-word-text");
+  var isEmpty = currentWordField.innerHTML.length === 0;
 
-  //handles cases for user's first selection
-  if (currentWordField.innerHTML === "") {
+  if (isEmpty) {
+    //handles cases for user's first selection &
+    //toggles on further selection highlighting
+    document.querySelectorAll("#tiles li").forEach(function (li) {
+      li.removeEventListener("mouseover", toggleTileActivation);
+      li.removeEventListener("mouseout", toggleTileActivation);
+      li.addEventListener("mouseover", tileSelection);
+    });
+
     var firstLetterNode = e.target;
     firstLetterNode.className = "selected";
     word = new _word2.default();
     word.add(firstLetterNode);
     currentWordField.innerHTML = word.letterNodes[0].innerHTML;
+  } else {
+    submitWord(e.target, currentWordField.innerHTML);
   }
-
-  //toggles further selection highlighting
-  document.querySelectorAll("#tiles li").forEach(function (li) {
-    li.removeEventListener("mouseover", toggleTileActivation);
-    li.removeEventListener("mouseout", toggleTileActivation);
-    li.addEventListener("mouseover", toggleTileSelection);
-  });
-
-  // const li = e.target;
-  //
-  // if (word.isValid(li)) {
-  // }
-  //
-  // let currentWordText = document.getElementById("current-word-text").innerHTML;
-  //
-  // currentWordText === ""
-  //   ? (currentWordText += `${li.innerHTML}`)
-  //   : (currentWordText += `${li.innerHTML.toLowerCase()}`);
-  //
-  // document.getElementById("current-word-text").innerHTML = currentWordText;
 };
 
-//   let firstLetter = e.target;
-//   firstLetter.className = "selected";
-//
-//   document.querySelectorAll("#tiles li").forEach(li => {
-//     li.removeEventListener("mouseover", toggleTileActivation);
-//     li.removeEventListener("mouseout", toggleTileActivation);
-//     li.addEventListener("mouseover", toggleTileSelection);
-//     li.addEventListener("mouseout", toggleTileSelection);
-//   });
-//
-//   const li = e.target;
-//
-//   let currentWordText = document.getElementById("current-word-text").innerHTML;
-//
-//   currentWordText === ""
-//     ? (currentWordText += `${li.innerHTML}`)
-//     : (currentWordText += `${li.innerHTML.toLowerCase()}`);
-//
-//   document.getElementById("current-word-text").innerHTML = currentWordText;
-// };
+var submitWord = exports.submitWord = function submitWord(currentTile, word) {
+  //toggles off selection highlighting & activation highlighting is toggled on
+  document.querySelectorAll("#tiles li").forEach(function (li) {
+    li.className = currentTile === li ? "focused" : "false";
+    li.removeEventListener("mouseover", tileSelection);
+    li.addEventListener("mouseover", toggleTileActivation);
+    li.addEventListener("mouseout", toggleTileActivation);
+  });
 
-////
-////
-////
-////
-////
+  clearWord();
+};
 
-var clearWord = exports.clearWord = function clearWord(e) {
+var clearWord = exports.clearWord = function clearWord() {
   document.getElementById("current-word-text").innerHTML = "";
 };
 
@@ -392,6 +368,12 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _tile = __webpack_require__(/*! ./tile */ "./lib/tile.js");
+
+var Tile = _interopRequireWildcard(_tile);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Word = function () {
@@ -443,18 +425,19 @@ var Word = function () {
     key: "isSelf",
     value: function isSelf(letterNode) {
       var currentWord = this.letterNodes;
-      var result = false;
 
       for (var i = 0; i < currentWord.length; i++) {
         if (currentWord[i].value === letterNode.value) {
           var backTrackedWord = currentWord.slice(0, i + 1);
+          var deSelectedWord = currentWord.slice(i);
+
+          Tile.deSelectTiles(deSelectedWord);
           this.letterNodes = backTrackedWord;
-          result = true;
-          break;
+          return true;
         }
       }
 
-      return result;
+      return false;
     }
   }, {
     key: "add",
