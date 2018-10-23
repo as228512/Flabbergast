@@ -159,35 +159,31 @@ var _word2 = _interopRequireDefault(_word);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var oldVersionTiles = [["R", "I", "F", "O", "B", "X"], ["I", "F", "E", "H", "E", "Y"], ["D", "E", "N", "O", "W", "S"], ["U", "T", "O", "K", "N", "D"], ["H", "M", "S", "R", "A", "O"], ["L", "U", "P", "E", "T", "S"], ["A", "C", "I", "T", "O", "A"], ["Y", "L", "G", "K", "U", "E"], ["Qu", "B", "M", "J", "O", "A"], ["E", "H", "I", "S", "P", "N"], ["V", "E", "T", "I", "G", "N"], ["B", "A", "L", "I", "Y", "T"], ["E", "Z", "A", "V", "N", "D"], ["R", "A", "L", "E", "S", "C"], ["U", "W", "I", "L", "R", "G"], ["P", "A", "C", "E", "M", "D"]];
+
+var newVersionTiles = [["A", "A", "E", "E", "G", "N"], ["E", "L", "R", "T", "T", "Y"], ["A", "O", "O", "T", "T", "W"], ["A", "B", "B", "J", "O", "O"], ["E", "H", "R", "T", "V", "W"], ["C", "I", "M", "O", "T", "V"], ["D", "I", "S", "T", "T", "Y"], ["E", "I", "O", "S", "S", "T"], ["D", "E", "L", "R", "V", "Y"], ["A", "C", "H", "O", "P", "S"], ["H", "I", "M", "N", "Qu", "U"], ["E", "E", "I", "N", "S", "U"], ["E", "E", "G", "H", "N", "W"], ["A", "F", "F", "K", "P", "S"], ["H", "L", "N", "N", "R", "Z"], ["D", "E", "I", "L", "R", "X"]];
+
 var sample = function sample(array) {
   return array[Math.floor(Math.random() * array.length)];
 };
 
-var tiles = {
-  1: ["R", "I", "F", "O", "B", "X"],
-  2: ["I", "F", "E", "H", "E", "Y"],
-  3: ["D", "E", "N", "O", "W", "S"],
-  4: ["U", "T", "O", "K", "N", "D"],
+var shuffleTiles = function shuffleTiles(tileSet) {
+  for (var i = tileSet.length - 1; i > 0; i--) {
+    var randomIdx = Math.floor(Math.random() * (i + 1));
+    var temp = tileSet[i];
+    tileSet[i] = tileSet[randomIdx];
+    tileSet[randomIdx] = temp;
+  }
 
-  5: ["H", "M", "S", "R", "A", "O"],
-  6: ["L", "U", "P", "E", "T", "S"],
-  7: ["A", "C", "I", "T", "O", "A"],
-  8: ["Y", "L", "G", "K", "U", "E"],
-
-  9: ["Qu", "B", "M", "J", "O", "A"],
-  10: ["E", "H", "I", "S", "P", "N"],
-  11: ["V", "E", "T", "I", "G", "N"],
-  12: ["B", "A", "L", "I", "Y", "T"],
-
-  13: ["E", "Z", "A", "V", "N", "D"],
-  14: ["R", "A", "L", "E", "S", "C"],
-  15: ["U", "W", "I", "L", "R", "G"],
-  16: ["P", "A", "C", "E", "M", "D"]
+  return tileSet;
 };
 
 var createTiles = exports.createTiles = function createTiles() {
+  var shuffledTiles = shuffleTiles(newVersionTiles).slice(0);
   for (var i = 1; i < 17; i++) {
-    document.getElementById("t" + i).innerHTML = sample(tiles[i]);
+    var tile = shuffledTiles.pop();
+    var randomLetter = sample(tile);
+    document.getElementById("t" + i).innerHTML = randomLetter;
   }
 };
 
@@ -390,8 +386,6 @@ var Word = function () {
       var isSibling = this.isNextTo(letterNode, lastLetterNode);
       var isSelf = this.isSelf(letterNode);
 
-      debugger;
-
       if (isSelf) return true;else if (isSibling) {
         this.add(letterNode);
         return true;
@@ -400,7 +394,6 @@ var Word = function () {
   }, {
     key: "isNextTo",
     value: function isNextTo(letterNode, lastLetterNode) {
-      // if (!lastLetterNode) return;
       var standardNodeDifferentials = [-5, -4, -3, -1, 1, 3, 4, 5];
       var cornerNodeDifferentials = {
         1: [1, 4, 5],
