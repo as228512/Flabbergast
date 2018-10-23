@@ -210,7 +210,8 @@ var tileSelection = exports.tileSelection = function tileSelection(e) {
     });
 
     var currentWordText = word.letterNodes.map(function (letterNode) {
-      return letterNode.innerHTML;
+      var isFirstLetter = letterNode.value === word.letterNodes[0].value;
+      return isFirstLetter ? letterNode.innerHTML : letterNode.innerHTML.toLowerCase();
     });
 
     document.getElementById("current-word-text").innerHTML = currentWordText.join("");
