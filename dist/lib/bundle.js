@@ -396,6 +396,12 @@ var Word = function () {
     key: "isNextTo",
     value: function isNextTo(letterNode, lastLetterNode) {
       var standardNodeDifferentials = [-5, -4, -3, -1, 1, 3, 4, 5];
+      var sideNodeDifferentials = {
+        5: [-4, -3, 1, 4, 5],
+        8: [-5, -4, -1, 3, 4],
+        9: [-4, -3, 1, 4, 5],
+        12: [-5, -4, -1, 3, 4]
+      };
       var cornerNodeDifferentials = {
         1: [1, 4, 5],
         4: [-1, 3, 4],
@@ -407,8 +413,14 @@ var Word = function () {
 
       var isCornerNode = cornerNodeDifferentials[lastLetterNode.value] ? true : false;
 
+      var isSideNode = sideNodeDifferentials[lastLetterNode.value] ? true : false;
+
       if (isCornerNode) {
         if (cornerNodeDifferentials[lastLetterNode.value].includes(differential)) {
+          return true;
+        }
+      } else if (isSideNode) {
+        if (sideNodeDifferentials[lastLetterNode.value].includes(differential)) {
           return true;
         }
       } else if (standardNodeDifferentials.includes(differential)) return true;
