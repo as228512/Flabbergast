@@ -1,18 +1,16 @@
-
-
-const path = require('path');
+const path = require("path");
 
 // production development
 
 module.exports = {
-  mode: 'development',
+  mode: "development",
   context: __dirname,
   entry: "./lib/canvas.js",
   output: {
-    filename: './lib/bundle.js'
+    filename: "./lib/bundle.js"
   },
   resolve: {
-    extensions: ['.js', '.jsx', '*']
+    extensions: [".js", ".jsx", "*"]
   },
   module: {
     rules: [
@@ -20,13 +18,13 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /(node_modules)/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           query: {
-            presets: ['env']
+            presets: ["env"]
           }
-        },
+        }
       }
     ]
   },
-  devtool: 'source-map'
+  devtool: "source-map"
 };
