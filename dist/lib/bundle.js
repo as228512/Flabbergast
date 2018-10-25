@@ -139,14 +139,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
 /***/ }),
 
-/***/ "./lib/legal-word.js":
-/*!***************************!*\
-  !*** ./lib/legal-word.js ***!
-  \***************************/
+/***/ "./lib/legal-words.js":
+/*!****************************!*\
+  !*** ./lib/legal-words.js ***!
+  \****************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open '/Users/andrewschumacher/Desktop/Flabbergast/lib/legal-word.js'");
+"use strict";
+
 
 /***/ }),
 
@@ -169,7 +170,7 @@ var _word = __webpack_require__(/*! ./word */ "./lib/word.js");
 
 var _word2 = _interopRequireDefault(_word);
 
-var _legalWord = __webpack_require__(/*! ./legal-word */ "./lib/legal-word.js");
+var _legalWords = __webpack_require__(/*! ./legal-words */ "./lib/legal-words.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -273,7 +274,7 @@ var submitWord = exports.submitWord = function submitWord(currentTile, word) {
   }).join("");
   //toggles off selection highlighting & activation highlighting is toggled on
   console.log("Word was: " + word);
-  console.log("Word included: " + _legalWord.dictionary.include(word));
+  console.log("Word included: " + _legalWords.dictionary.include(word));
   document.querySelectorAll("#tiles li").forEach(function (li) {
     li.className = currentTile === li ? "focused" : "false";
     li.removeEventListener("mouseover", tileSelection);
