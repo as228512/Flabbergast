@@ -139,18 +139,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 /***/ }),
 
-/***/ "./lib/legal-words.js":
-/*!****************************!*\
-  !*** ./lib/legal-words.js ***!
-  \****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/***/ }),
-
 /***/ "./lib/tile.js":
 /*!*********************!*\
   !*** ./lib/tile.js ***!
@@ -170,9 +158,9 @@ var _word = __webpack_require__(/*! ./word */ "./lib/word.js");
 
 var _word2 = _interopRequireDefault(_word);
 
-var _legalWords = __webpack_require__(/*! ./legal-words */ "./lib/legal-words.js");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// import { dictionary } from "./legal-words";
 
 var oldVersionTiles = [["R", "I", "F", "O", "B", "X"], ["I", "F", "E", "H", "E", "Y"], ["D", "E", "N", "O", "W", "S"], ["U", "T", "O", "K", "N", "D"], ["H", "M", "S", "R", "A", "O"], ["L", "U", "P", "E", "T", "S"], ["A", "C", "I", "T", "O", "A"], ["Y", "L", "G", "K", "U", "E"], ["Qu", "B", "M", "J", "O", "A"], ["E", "H", "I", "S", "P", "N"], ["V", "E", "T", "I", "G", "N"], ["B", "A", "L", "I", "Y", "T"], ["E", "Z", "A", "V", "N", "D"], ["R", "A", "L", "E", "S", "C"], ["U", "W", "I", "L", "R", "G"], ["P", "A", "C", "E", "M", "D"]];
 
@@ -274,7 +262,7 @@ var submitWord = exports.submitWord = function submitWord(currentTile, word) {
   }).join("");
   //toggles off selection highlighting & activation highlighting is toggled on
   console.log("Word was: " + word);
-  console.log("Word included: " + _legalWords.dictionary.include(word));
+  console.log("Word included: " + dictionary.includes(word));
   document.querySelectorAll("#tiles li").forEach(function (li) {
     li.className = currentTile === li ? "focused" : "false";
     li.removeEventListener("mouseover", tileSelection);

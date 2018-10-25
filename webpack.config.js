@@ -3,6 +3,9 @@ const path = require("path");
 // production development
 
 module.exports = {
+  watchOptions: {
+    ignored: /node_modules/
+  },
   mode: "development",
   context: __dirname,
   entry: "./lib/canvas.js",
