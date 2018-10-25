@@ -134,7 +134,19 @@ var _board = __webpack_require__(/*! ./board.js */ "./lib/board.js");
 document.addEventListener("DOMContentLoaded", function () {
   (0, _tile.createTiles)();
   (0, _board.startReset)();
+  document.getElementById("sub-words").innerHTML = "TESTING";
 });
+
+/***/ }),
+
+/***/ "./lib/legal-word.js":
+/*!***************************!*\
+  !*** ./lib/legal-word.js ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+throw new Error("Module build failed: Error: ENOENT: no such file or directory, open '/Users/andrewschumacher/Desktop/Flabbergast/lib/legal-word.js'");
 
 /***/ }),
 
@@ -156,6 +168,8 @@ exports.clearWord = exports.submitWord = exports.formWord = exports.deSelectTile
 var _word = __webpack_require__(/*! ./word */ "./lib/word.js");
 
 var _word2 = _interopRequireDefault(_word);
+
+var _legalWord = __webpack_require__(/*! ./legal-word */ "./lib/legal-word.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -254,7 +268,12 @@ var formWord = exports.formWord = function formWord(e) {
 };
 
 var submitWord = exports.submitWord = function submitWord(currentTile, word) {
+  word = word.split("").map(function (char) {
+    return char.toUpperCase();
+  }).join("");
   //toggles off selection highlighting & activation highlighting is toggled on
+  console.log("Word was: " + word);
+  console.log("Word included: " + _legalWord.dictionary.include(word));
   document.querySelectorAll("#tiles li").forEach(function (li) {
     li.className = currentTile === li ? "focused" : "false";
     li.removeEventListener("mouseover", tileSelection);
