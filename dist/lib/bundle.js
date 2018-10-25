@@ -134,8 +134,53 @@ var _board = __webpack_require__(/*! ./board.js */ "./lib/board.js");
 document.addEventListener("DOMContentLoaded", function () {
   (0, _tile.createTiles)();
   (0, _board.startReset)();
-  document.getElementById("sub-words").innerHTML = "TESTING";
+  // document.getElementById("sub-words").innerHTML = "TESTING";
 });
+
+/***/ }),
+
+/***/ "./lib/found-words.js":
+/*!****************************!*\
+  !*** ./lib/found-words.js ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var scoreTable = {
+  3: 8,
+  4: 10,
+  5: 13,
+  6: 17,
+  7: 22,
+  longer: 30
+};
+
+var awardPoints = exports.awardPoints = function awardPoints(word) {
+  var pointsAwarded = word.length < 8 ? scoreTable[word.length] : scoreTable["longer"];
+
+  var score = Number(document.getElementsByClassName("score")[0].innerHTML.replace(/[^\d]/g, ""));
+
+  document.getElementsByClassName("score")[0].innerHTML = "Score: " + (score += pointsAwarded);
+
+  appendWord(word);
+};
+
+var appendWord = function appendWord(word) {
+  // const foundWords = document.getElementById("sub-words");
+  var foundWordsTail = document.getElementById("tail");
+  var child = document.createElement("li");
+  var nodeText = document.createTextNode("" + word);
+  child.appendChild(nodeText);
+
+  document.getElementById("word-list").insertBefore(child, foundWordsTail);
+  // foundWords.appendChild(child);
+};
 
 /***/ }),
 
@@ -157,6 +202,8 @@ exports.clearWord = exports.submitWord = exports.formWord = exports.deSelectTile
 var _word = __webpack_require__(/*! ./word */ "./lib/word.js");
 
 var _word2 = _interopRequireDefault(_word);
+
+var _foundWords = __webpack_require__(/*! ./found-words */ "./lib/found-words.js");
 
 var _aList = __webpack_require__(/*! ./word-lists/a-list */ "./lib/word-lists/a-list.js");
 
@@ -341,16 +388,19 @@ var submitWord = exports.submitWord = function submitWord(currentTile, word) {
   }).join("");
 
   var firstLetter = word[0];
-  debugger;
-  //toggles off selection highlighting & activation highlighting is toggled on
-  console.log("Word was: " + word);
-  console.log("Word included: " + wordBank[firstLetter].includes(word));
-  document.querySelectorAll("#tiles li").forEach(function (li) {
-    li.className = currentTile === li ? "focused" : "false";
-    li.removeEventListener("mouseover", tileSelection);
-    li.addEventListener("mouseover", toggleTileActivation);
-    li.addEventListener("mouseout", toggleTileActivation);
-  });
+
+  if (wordBank[firstLetter].includes(word)) {
+    //function to append found word to word list and increase score
+    (0, _foundWords.awardPoints)(word);
+
+    //toggles off selection highlighting & activation highlighting is toggled on
+    document.querySelectorAll("#tiles li").forEach(function (li) {
+      li.className = currentTile === li ? "focused" : "false";
+      li.removeEventListener("mouseover", tileSelection);
+      li.addEventListener("mouseover", toggleTileActivation);
+      li.addEventListener("mouseout", toggleTileActivation);
+    });
+  }
 
   clearWord();
 };

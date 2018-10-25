@@ -60,14 +60,38 @@ input[type="button"]:focus {
   padding: 10px;
 }
 
+.word-list-heading {
+  margin-top: 10px;
+  margin-left: 10px;
+  text-align: left;
+}
+
 .timer,
-.points {
+.score,
+.word-list-heading {
   background: -webkit-linear-gradient(#6e6161, rgba(254, 254, 254, 1));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  width: 300px;
-  display: block;
   font-size: 24px;
+}
+
+.word-list {
+  margin-left: 10px;
+  margin-top: 15px;
+  margin-right: 10px;
+  text-align: left;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.word-list li {
+  background: -webkit-linear-gradient(#6e6161, rgba(254, 254, 254, 1));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 24px;
+  margin-bottom: 5px;
+  margin-right: 10px;
 }
 
 #start-button {
