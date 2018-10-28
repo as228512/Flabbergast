@@ -75,13 +75,21 @@ input[type="button"]:focus {
   font-size: 24px;
 }
 
+.timer {
+  min-width: 15%;
+}
+
+.score {
+  min-width: 19%;
+}
+
 .word-list {
+  max-height: 89%;
   margin-left: 10px;
   margin-top: 15px;
-  margin-right: 10px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  overflow-y: scroll;
 }
 
 .word-list li {
