@@ -64,6 +64,8 @@ input[type="button"]:focus {
   margin-top: 10px;
   margin-left: 10px;
   text-align: left;
+  border-bottom: 2px solid rgb(226, 226, 226);
+  margin-right: 49%;
 }
 
 .timer,
@@ -105,7 +107,7 @@ input[type="button"]:focus {
   font-size: 16px;
   letter-spacing: 2px;
   font-weight: 700;
-  width: 100px;
+  width: 75px;
   color: #330a00;
   background: linear-gradient(
     to bottom,
@@ -115,7 +117,7 @@ input[type="button"]:focus {
     rgba(254, 254, 254, 1) 96%
   );
   cursor: pointer;
-  border-image: inherit;
+  border-radius: 8px;
 }
 
 .game-ctr {
