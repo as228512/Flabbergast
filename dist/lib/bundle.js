@@ -172,14 +172,12 @@ var awardPoints = exports.awardPoints = function awardPoints(word) {
 };
 
 var appendWord = function appendWord(word) {
-  // const foundWords = document.getElementById("sub-words");
   var foundWordsTail = document.getElementById("tail");
   var child = document.createElement("li");
   var nodeText = document.createTextNode("" + word);
   child.appendChild(nodeText);
 
   document.getElementById("word-list").insertBefore(child, foundWordsTail);
-  // foundWords.appendChild(child);
 };
 
 /***/ }),
@@ -197,7 +195,7 @@ var appendWord = function appendWord(word) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.clearWord = exports.submitWord = exports.formWord = exports.deSelectTiles = exports.tileSelection = exports.toggleTileActivation = exports.activateTiles = exports.createTiles = undefined;
+exports.deSelectTiles = exports.clearWord = exports.tileSelection = exports.toggleTileActivation = exports.submitWord = exports.createNewWord = exports.handleTileClick = exports.activateTiles = exports.createTiles = undefined;
 
 var _word = __webpack_require__(/*! ./word */ "./lib/word.js");
 
@@ -320,8 +318,71 @@ var activateTiles = exports.activateTiles = function activateTiles() {
   document.querySelectorAll("#tiles li").forEach(function (li) {
     li.addEventListener("mouseover", toggleTileActivation);
     li.addEventListener("mouseout", toggleTileActivation);
-    li.addEventListener("click", formWord);
+    li.addEventListener("click", handleTileClick);
   });
+};
+
+var getCurrentWordField = function getCurrentWordField() {
+  return document.getElementById("current-word-text");
+};
+
+var word;
+var handleTileClick = exports.handleTileClick = function handleTileClick(e) {
+  var currentWord = getCurrentWordField().innerHTML;
+  var isStartOfWord = !currentWord.length;
+  var currentTile = e.target;
+
+  toggleWordSelection(isStartOfWord, currentTile);
+
+  if (isStartOfWord) {
+    createNewWord(currentTile);
+  } else {
+    submitWord(getCurrentWordField().innerHTML);
+  }
+};
+
+var createNewWord = exports.createNewWord = function createNewWord(tile) {
+  var firstLetterNode = tile;
+  firstLetterNode.className = "selected";
+  word = new _word2.default();
+  word.add(firstLetterNode);
+  getCurrentWordField().innerHTML = word.letterNodes[0].innerHTML;
+};
+
+var submitWord = exports.submitWord = function submitWord(word) {
+  //Formats word for x-ref to dictionary
+  word = word.split("").map(function (char) {
+    return char.toUpperCase();
+  }).join("");
+
+  var firstLetter = word[0];
+
+  if (wordBank[firstLetter].includes(word) && word.length > 2) {
+    //function to append found word to word list and increase score
+    (0, _foundWords.awardPoints)(word);
+  }
+
+  clearWord();
+};
+
+var toggleWordSelection = function toggleWordSelection(isStartOfWord, currentTile) {
+  if (isStartOfWord) {
+    //handles cases for user's first selection &
+    //toggles on further selection highlighting
+    document.querySelectorAll("#tiles li").forEach(function (li) {
+      li.removeEventListener("mouseover", toggleTileActivation);
+      li.removeEventListener("mouseout", toggleTileActivation);
+      li.addEventListener("mouseover", tileSelection);
+    });
+  } else {
+    //toggles off selection highlighting & activation highlighting is toggled on
+    document.querySelectorAll("#tiles li").forEach(function (li) {
+      li.className = currentTile === li ? "focused" : "false";
+      li.removeEventListener("mouseover", tileSelection);
+      li.addEventListener("mouseover", toggleTileActivation);
+      li.addEventListener("mouseout", toggleTileActivation);
+    });
+  }
 };
 
 var toggleTileActivation = exports.toggleTileActivation = function toggleTileActivation(e) {
@@ -333,18 +394,24 @@ var toggleTileActivation = exports.toggleTileActivation = function toggleTileAct
 var tileSelection = exports.tileSelection = function tileSelection(e) {
   var li = e.target;
 
+  //checks proximity validity of new tile selection
   if (word.isValid(li)) {
     word.letterNodes.forEach(function (node) {
       node.className = "selected";
     });
 
+    //formats tail of word to lowerCase
     var currentWordText = word.letterNodes.map(function (letterNode) {
       var isFirstLetter = letterNode.value === word.letterNodes[0].value;
       return isFirstLetter ? letterNode.innerHTML : letterNode.innerHTML.toLowerCase();
     });
 
-    document.getElementById("current-word-text").innerHTML = currentWordText.join("");
+    getCurrentWordField().innerHTML = currentWordText.join("");
   }
+};
+
+var clearWord = exports.clearWord = function clearWord() {
+  getCurrentWordField().innerHTML = "";
 };
 
 var deSelectTiles = exports.deSelectTiles = function deSelectTiles(nodeArray) {
@@ -352,93 +419,6 @@ var deSelectTiles = exports.deSelectTiles = function deSelectTiles(nodeArray) {
     tile.className = "false";
   });
 };
-
-////
-////
-////
-////
-////
-var word;
-var formWord = exports.formWord = function formWord(e) {
-  var currentWordField = document.getElementById("current-word-text");
-  var isEmpty = currentWordField.innerHTML.length === 0;
-
-  if (isEmpty) {
-    //handles cases for user's first selection &
-    //toggles on further selection highlighting
-    document.querySelectorAll("#tiles li").forEach(function (li) {
-      li.removeEventListener("mouseover", toggleTileActivation);
-      li.removeEventListener("mouseout", toggleTileActivation);
-      li.addEventListener("mouseover", tileSelection);
-    });
-
-    var firstLetterNode = e.target;
-    firstLetterNode.className = "selected";
-    word = new _word2.default();
-    word.add(firstLetterNode);
-    currentWordField.innerHTML = word.letterNodes[0].innerHTML;
-  } else {
-    submitWord(e.target, currentWordField.innerHTML);
-  }
-};
-
-var submitWord = exports.submitWord = function submitWord(currentTile, word) {
-  word = word.split("").map(function (char) {
-    return char.toUpperCase();
-  }).join("");
-
-  var firstLetter = word[0];
-
-  if (wordBank[firstLetter].includes(word)) {
-    //function to append found word to word list and increase score
-    (0, _foundWords.awardPoints)(word);
-
-    //toggles off selection highlighting & activation highlighting is toggled on
-    document.querySelectorAll("#tiles li").forEach(function (li) {
-      li.className = currentTile === li ? "focused" : "false";
-      li.removeEventListener("mouseover", tileSelection);
-      li.addEventListener("mouseover", toggleTileActivation);
-      li.addEventListener("mouseout", toggleTileActivation);
-    });
-  }
-
-  clearWord();
-};
-
-var clearWord = exports.clearWord = function clearWord() {
-  document.getElementById("current-word-text").innerHTML = "";
-};
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /***/ }),
 
