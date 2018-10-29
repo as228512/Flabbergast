@@ -88,31 +88,31 @@ exports.toggleStartButton = exports.startReset = undefined;
 
 var _tile = __webpack_require__(/*! ./tile */ "./lib/tile.js");
 
-var Tile = _interopRequireWildcard(_tile);
-
 var _timer = __webpack_require__(/*! ./timer */ "./lib/timer.js");
 
-var Timer = _interopRequireWildcard(_timer);
+var _foundWords = __webpack_require__(/*! ./found-words */ "./lib/found-words.js");
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+// import * as Timer from "./timer";
+// import * as FoundWords from "./found-words";
 
 var startReset = exports.startReset = function startReset() {
   document.getElementById("start-button").onclick = function () {
-    Timer.resetTimer();
-    Tile.clearWord();
-    Tile.createTiles();
+    (0, _timer.resetTimer)();
+    (0, _tile.clearWord)();
+    (0, _foundWords.resetScore)();
+    (0, _foundWords.resetWordField)();
     toggleStartButton("start");
+    (0, _tile.createTiles)();
     activateGame();
   };
-};
-
+}; // import * as Tile from "./tile";
 var toggleStartButton = exports.toggleStartButton = function toggleStartButton(requestType) {
   requestType === "start" ? document.getElementById("start-button").innerHTML = "Reset" : document.getElementById("start-button").innerHTML = "Start";
 };
 
 var activateGame = function activateGame() {
-  Timer.startTimer();
-  Tile.activateTiles();
+  (0, _timer.startTimer)();
+  (0, _tile.activateTiles)();
 };
 
 /***/ }),
@@ -134,7 +134,6 @@ var _board = __webpack_require__(/*! ./board.js */ "./lib/board.js");
 document.addEventListener("DOMContentLoaded", function () {
   (0, _tile.createTiles)();
   (0, _board.startReset)();
-  // document.getElementById("sub-words").innerHTML = "TESTING";
 });
 
 /***/ }),
@@ -161,12 +160,20 @@ var scoreTable = {
   longer: 30
 };
 
+var getPointField = function getPointField() {
+  return document.getElementsByClassName("score")[0];
+};
+
+var getWordField = function getWordField() {
+  return document.getElementById("word-list");
+};
+
 var awardPoints = exports.awardPoints = function awardPoints(word) {
   var pointsAwarded = word.length < 8 ? scoreTable[word.length] : scoreTable["longer"];
 
-  var score = Number(document.getElementsByClassName("score")[0].innerHTML.replace(/[^\d]/g, ""));
+  var score = Number(getPointField().innerHTML.replace(/[^\d]/g, ""));
 
-  document.getElementsByClassName("score")[0].innerHTML = "Score: " + (score += pointsAwarded);
+  getPointField().innerHTML = "Score: " + (score += pointsAwarded);
 
   appendWord(word);
 };
@@ -177,7 +184,22 @@ var appendWord = function appendWord(word) {
   var nodeText = document.createTextNode("" + word);
   child.appendChild(nodeText);
 
-  document.getElementById("word-list").insertBefore(child, foundWordsTail);
+  getWordField().insertBefore(child, foundWordsTail);
+};
+
+var resetWordField = exports.resetWordField = function resetWordField() {
+  var parent = getWordField();
+  var children = parent.childNodes;
+  var tail = document.getElementById("tail");
+
+  while (parent.firstChild) {
+    if (parent.firstChild === tail) break;
+    parent.removeChild(parent.firstChild);
+  }
+};
+
+var resetScore = exports.resetScore = function resetScore() {
+  getPointField().innerHTML = "Score: 0";
 };
 
 /***/ }),
@@ -195,7 +217,7 @@ var appendWord = function appendWord(word) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.deSelectTiles = exports.clearWord = exports.tileSelection = exports.toggleTileActivation = exports.submitWord = exports.createNewWord = exports.handleTileClick = exports.activateTiles = exports.createTiles = undefined;
+exports.deSelectTiles = exports.clearWord = exports.tileSelection = exports.toggleTileActivation = exports.submitWord = exports.createNewWord = exports.handleTileClick = exports.deActivateTiles = exports.activateTiles = exports.createTiles = undefined;
 
 var _word = __webpack_require__(/*! ./word */ "./lib/word.js");
 
@@ -322,6 +344,16 @@ var activateTiles = exports.activateTiles = function activateTiles() {
   });
 };
 
+var deActivateTiles = exports.deActivateTiles = function deActivateTiles() {
+  document.querySelectorAll("#tiles li").forEach(function (li) {
+    li.className = "false";
+    li.removeEventListener("mouseover", toggleTileActivation);
+    li.removeEventListener("mouseover", tileSelection);
+    li.removeEventListener("mouseout", toggleTileActivation);
+    li.removeEventListener("click", handleTileClick);
+  });
+};
+
 var getCurrentWordField = function getCurrentWordField() {
   return document.getElementById("current-word-text");
 };
@@ -439,6 +471,8 @@ exports.tickTimer = exports.resetTimer = exports.stopTimer = exports.startTimer 
 
 var _board = __webpack_require__(/*! ./board */ "./lib/board.js");
 
+var _tile = __webpack_require__(/*! ./tile */ "./lib/tile.js");
+
 var timerIntervalId = void 0;
 var startTimer = exports.startTimer = function startTimer() {
   timerIntervalId = setInterval(tickTimer, 1000);
@@ -458,6 +492,7 @@ var tickTimer = exports.tickTimer = function tickTimer() {
 
   if (time === 0) {
     stopTimer();
+    (0, _tile.deActivateTiles)();
     (0, _board.toggleStartButton)();
     return;
   }
@@ -929,10 +964,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _tile = __webpack_require__(/*! ./tile */ "./lib/tile.js");
 
-var Tile = _interopRequireWildcard(_tile);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Word = function () {
@@ -999,7 +1030,7 @@ var Word = function () {
           var backTrackedWord = currentWord.slice(0, i + 1);
           var deSelectedWord = currentWord.slice(i);
 
-          Tile.deSelectTiles(deSelectedWord);
+          (0, _tile.deSelectTiles)(deSelectedWord);
           this.letterNodes = backTrackedWord;
           return true;
         }
