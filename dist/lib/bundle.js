@@ -363,7 +363,7 @@ var activateTiles = exports.activateTiles = function activateTiles() {
     li.className = "false";
     li.addEventListener("mouseover", toggleTileActivation);
     li.addEventListener("mouseout", toggleTileActivation);
-    li.addEventListener("click", handleTileClick);
+    li.addEventListener("mousedown", handleTileClick);
   });
 };
 
@@ -373,7 +373,7 @@ var deActivateTiles = exports.deActivateTiles = function deActivateTiles() {
     li.removeEventListener("mouseover", toggleTileActivation);
     li.removeEventListener("mouseover", tileSelection);
     li.removeEventListener("mouseout", toggleTileActivation);
-    li.removeEventListener("click", handleTileClick);
+    li.removeEventListener("mousedown", handleTileClick);
   });
 };
 
@@ -423,13 +423,13 @@ var submitWord = exports.submitWord = function submitWord(word, currentTile, was
 
     setTimeout(function () {
       toggleWordSelection(false, currentTile);
-    }, 400);
+    }, 200);
   } else {
     flashTileVerdict(false);
 
     setTimeout(function () {
       toggleWordSelection(false, currentTile);
-    }, 400);
+    }, 200);
   }
 
   (0, _board.resetCurrentWordField)();
@@ -451,27 +451,39 @@ var flashTileVerdict = function flashTileVerdict(verdict) {
   }
 };
 
+var fetchAllTiles = function fetchAllTiles() {
+  return document.querySelectorAll("#tiles li");
+};
+
 var toggleWordSelection = function toggleWordSelection() {
   var isStartOfWord = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   var currentTile = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
+  var tiles = fetchAllTiles();
   if (isStartOfWord) {
     //handles cases for user's first selection &
     //toggles on further selection highlighting
-    document.querySelectorAll("#tiles li").forEach(function (li) {
+    tiles.forEach(function (li) {
       li.removeEventListener("mouseover", toggleTileActivation);
       li.removeEventListener("mouseout", toggleTileActivation);
       li.addEventListener("mouseover", tileSelection);
     });
   } else {
     //toggles off selection highlighting & activation highlighting is toggled on
-    document.querySelectorAll("#tiles li").forEach(function (li) {
+    tiles.forEach(function (li) {
       li.className = currentTile === li ? "focused" : "false";
       li.removeEventListener("mouseover", tileSelection);
       li.addEventListener("mouseover", toggleTileActivation);
       li.addEventListener("mouseout", toggleTileActivation);
     });
   }
+};
+
+var resetAllTiles = function resetAllTiles() {
+  var tiles = fetchAllTiles();
+  tiles.forEach(function (tile) {
+    tile.className = "false";
+  });
 };
 
 var toggleTileActivation = exports.toggleTileActivation = function toggleTileActivation(e) {

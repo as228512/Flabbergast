@@ -62,7 +62,8 @@ input[type="button"]:focus {
   padding: 10px;
 }
 
-.word-list-heading {
+.word-list-heading,
+.instructions-heading {
   margin-top: 10px;
   margin-left: 10px;
   text-align: left;
@@ -70,13 +71,60 @@ input[type="button"]:focus {
   margin-right: 49%;
 }
 
+.instruction-details {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  margin-left: 3%;
+  margin-top: 10px;
+}
+
+.instruction-details h3 {
+  font-size: 20px !important;
+  border-bottom: 2px solid rgb(226, 226, 226);
+  margin-top: 5px;
+  margin-left: 0;
+}
+
+.instruction-text,
+.instruction-text-indented,
+.instruction-text-heading-1,
+.instruction-text-heading-2 {
+  font-size: 18px !important;
+  margin-bottom: 6px;
+  margin-left: 2%;
+}
+
+.instruction-text-heading-1 {
+  margin-right: 64%;
+}
+
+.instruction-text-heading-2 {
+  margin-right: 53%;
+}
+
+.instruction-text-indented {
+  margin-top: -6px;
+  margin-left: 5.5%;
+}
+
 .timer,
 .score,
-.word-list-heading {
+.word-list-heading,
+.instructions-heading,
+.instruction-text,
+.instruction-text-indented,
+.instruction-text-heading-1,
+.instruction-text-heading-2 {
   background: -webkit-linear-gradient(#6e6161, rgba(254, 254, 254, 1));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-size: 24px;
+}
+
+.instructions-heading {
+  margin-right: 57%;
 }
 
 .timer {
