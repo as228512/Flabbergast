@@ -92,27 +92,40 @@ var _timer = __webpack_require__(/*! ./timer */ "./lib/timer.js");
 
 var _foundWords = __webpack_require__(/*! ./found-words */ "./lib/found-words.js");
 
-// import * as Timer from "./timer";
-// import * as FoundWords from "./found-words";
-
 var startReset = exports.startReset = function startReset() {
   document.getElementById("start-button").onclick = function () {
     (0, _timer.resetTimer)();
     (0, _tile.clearWord)();
-    (0, _foundWords.resetScore)();
-    (0, _foundWords.resetWordField)();
+    resetScore();
+    resetWordField();
     toggleStartButton("start");
     (0, _tile.createTiles)();
     activateGame();
   };
-}; // import * as Tile from "./tile";
-var toggleStartButton = exports.toggleStartButton = function toggleStartButton(requestType) {
-  requestType === "start" ? document.getElementById("start-button").innerHTML = "Reset" : document.getElementById("start-button").innerHTML = "Start";
 };
 
 var activateGame = function activateGame() {
   (0, _timer.startTimer)();
   (0, _tile.activateTiles)();
+};
+
+var toggleStartButton = exports.toggleStartButton = function toggleStartButton(requestType) {
+  requestType === "start" ? document.getElementById("start-button").innerHTML = "Reset" : document.getElementById("start-button").innerHTML = "Start";
+};
+
+var resetWordField = function resetWordField() {
+  var parent = (0, _foundWords.getWordField)();
+  var children = parent.childNodes;
+  var tail = document.getElementById("tail");
+
+  while (parent.firstChild) {
+    if (parent.firstChild === tail) break;
+    parent.removeChild(parent.firstChild);
+  }
+};
+
+var resetScore = function resetScore() {
+  (0, _foundWords.getPointField)().innerHTML = "Score: 0";
 };
 
 /***/ }),
@@ -160,14 +173,6 @@ var scoreTable = {
   longer: 30
 };
 
-var getPointField = function getPointField() {
-  return document.getElementsByClassName("score")[0];
-};
-
-var getWordField = function getWordField() {
-  return document.getElementById("word-list");
-};
-
 var awardPoints = exports.awardPoints = function awardPoints(word) {
   var pointsAwarded = word.length < 8 ? scoreTable[word.length] : scoreTable["longer"];
 
@@ -187,19 +192,12 @@ var appendWord = function appendWord(word) {
   getWordField().insertBefore(child, foundWordsTail);
 };
 
-var resetWordField = exports.resetWordField = function resetWordField() {
-  var parent = getWordField();
-  var children = parent.childNodes;
-  var tail = document.getElementById("tail");
-
-  while (parent.firstChild) {
-    if (parent.firstChild === tail) break;
-    parent.removeChild(parent.firstChild);
-  }
+var getPointField = function getPointField() {
+  return document.getElementsByClassName("score")[0];
 };
 
-var resetScore = exports.resetScore = function resetScore() {
-  getPointField().innerHTML = "Score: 0";
+var getWordField = function getWordField() {
+  return document.getElementById("word-list");
 };
 
 /***/ }),
