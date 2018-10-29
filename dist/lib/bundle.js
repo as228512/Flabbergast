@@ -84,20 +84,18 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.toggleStartButton = exports.startReset = undefined;
+exports.foundWordsToArray = exports.getFoundWordsList = exports.getPointsField = exports.getCurrentWordField = exports.resetCurrentWordField = exports.toggleStartButton = exports.startReset = undefined;
 
 var _tile = __webpack_require__(/*! ./tile */ "./lib/tile.js");
 
 var _timer = __webpack_require__(/*! ./timer */ "./lib/timer.js");
 
-var _foundWords = __webpack_require__(/*! ./found-words */ "./lib/found-words.js");
-
 var startReset = exports.startReset = function startReset() {
   document.getElementById("start-button").onclick = function () {
     (0, _timer.resetTimer)();
-    (0, _tile.clearWord)();
+    resetCurrentWordField();
     resetScore();
-    resetWordField();
+    resetFoundWordsList();
     toggleStartButton("start");
     (0, _tile.createTiles)();
     activateGame();
@@ -113,8 +111,8 @@ var toggleStartButton = exports.toggleStartButton = function toggleStartButton(r
   requestType === "start" ? document.getElementById("start-button").innerHTML = "Reset" : document.getElementById("start-button").innerHTML = "Start";
 };
 
-var resetWordField = function resetWordField() {
-  var parent = (0, _foundWords.getWordField)();
+var resetFoundWordsList = function resetFoundWordsList() {
+  var parent = getFoundWordsList();
   var children = parent.childNodes;
   var tail = document.getElementById("tail");
 
@@ -124,8 +122,36 @@ var resetWordField = function resetWordField() {
   }
 };
 
+var resetCurrentWordField = exports.resetCurrentWordField = function resetCurrentWordField() {
+  getCurrentWordField().innerHTML = "";
+};
+
 var resetScore = function resetScore() {
-  (0, _foundWords.getPointField)().innerHTML = "Score: 0";
+  getPointsField().innerHTML = "Score: 0";
+};
+
+var getCurrentWordField = exports.getCurrentWordField = function getCurrentWordField() {
+  return document.getElementById("current-word-text");
+};
+
+var getPointsField = exports.getPointsField = function getPointsField() {
+  return document.getElementsByClassName("score")[0];
+};
+
+var getFoundWordsList = exports.getFoundWordsList = function getFoundWordsList() {
+  return document.getElementById("word-list");
+};
+
+var foundWordsToArray = exports.foundWordsToArray = function foundWordsToArray() {
+  var foundWordsList = getFoundWordsList();
+  var childNodes = foundWordsList.childNodes;
+  var arrayList = [];
+
+  for (var i = 0; i < childNodes.length; i++) {
+    arrayList.push(childNodes[i].innerHTML);
+  }
+
+  return arrayList;
 };
 
 /***/ }),
@@ -164,6 +190,10 @@ document.addEventListener("DOMContentLoaded", function () {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.awardPoints = undefined;
+
+var _board = __webpack_require__(/*! ./board */ "./lib/board.js");
+
 var scoreTable = {
   3: 8,
   4: 10,
@@ -176,28 +206,20 @@ var scoreTable = {
 var awardPoints = exports.awardPoints = function awardPoints(word) {
   var pointsAwarded = word.length < 8 ? scoreTable[word.length] : scoreTable["longer"];
 
-  var score = Number(getPointField().innerHTML.replace(/[^\d]/g, ""));
+  var score = Number((0, _board.getPointsField)().innerHTML.replace(/[^\d]/g, ""));
 
-  getPointField().innerHTML = "Score: " + (score += pointsAwarded);
+  (0, _board.getPointsField)().innerHTML = "Score: " + (score += pointsAwarded);
 
   appendWord(word);
 };
 
 var appendWord = function appendWord(word) {
   var foundWordsTail = document.getElementById("tail");
-  var child = document.createElement("li");
+  var newChild = document.createElement("li");
   var nodeText = document.createTextNode("" + word);
-  child.appendChild(nodeText);
+  newChild.appendChild(nodeText);
 
-  getWordField().insertBefore(child, foundWordsTail);
-};
-
-var getPointField = function getPointField() {
-  return document.getElementsByClassName("score")[0];
-};
-
-var getWordField = function getWordField() {
-  return document.getElementById("word-list");
+  (0, _board.getFoundWordsList)().insertBefore(newChild, foundWordsTail);
 };
 
 /***/ }),
@@ -222,6 +244,8 @@ var _word = __webpack_require__(/*! ./word */ "./lib/word.js");
 var _word2 = _interopRequireDefault(_word);
 
 var _foundWords = __webpack_require__(/*! ./found-words */ "./lib/found-words.js");
+
+var _board = __webpack_require__(/*! ./board */ "./lib/board.js");
 
 var _aList = __webpack_require__(/*! ./word-lists/a-list */ "./lib/word-lists/a-list.js");
 
@@ -336,6 +360,7 @@ var createTiles = exports.createTiles = function createTiles() {
 
 var activateTiles = exports.activateTiles = function activateTiles() {
   document.querySelectorAll("#tiles li").forEach(function (li) {
+    li.className = "false";
     li.addEventListener("mouseover", toggleTileActivation);
     li.addEventListener("mouseout", toggleTileActivation);
     li.addEventListener("click", handleTileClick);
@@ -344,7 +369,7 @@ var activateTiles = exports.activateTiles = function activateTiles() {
 
 var deActivateTiles = exports.deActivateTiles = function deActivateTiles() {
   document.querySelectorAll("#tiles li").forEach(function (li) {
-    li.className = "false";
+    li.className = "inactive";
     li.removeEventListener("mouseover", toggleTileActivation);
     li.removeEventListener("mouseover", tileSelection);
     li.removeEventListener("mouseout", toggleTileActivation);
@@ -352,13 +377,9 @@ var deActivateTiles = exports.deActivateTiles = function deActivateTiles() {
   });
 };
 
-var getCurrentWordField = function getCurrentWordField() {
-  return document.getElementById("current-word-text");
-};
-
 var word;
 var handleTileClick = exports.handleTileClick = function handleTileClick(e) {
-  var currentWord = getCurrentWordField().innerHTML;
+  var currentWord = (0, _board.getCurrentWordField)().innerHTML;
   var isStartOfWord = !currentWord.length;
   var currentTile = e.target;
 
@@ -367,7 +388,7 @@ var handleTileClick = exports.handleTileClick = function handleTileClick(e) {
   if (isStartOfWord) {
     createNewWord(currentTile);
   } else {
-    submitWord(getCurrentWordField().innerHTML);
+    isValidWord((0, _board.getCurrentWordField)().innerHTML);
   }
 };
 
@@ -376,23 +397,29 @@ var createNewWord = exports.createNewWord = function createNewWord(tile) {
   firstLetterNode.className = "selected";
   word = new _word2.default();
   word.add(firstLetterNode);
-  getCurrentWordField().innerHTML = word.letterNodes[0].innerHTML;
+  (0, _board.getCurrentWordField)().innerHTML = word.letterNodes[0].innerHTML;
 };
 
-var submitWord = exports.submitWord = function submitWord(word) {
+var isValidWord = function isValidWord(word) {
   //Formats word for x-ref to dictionary
   word = word.split("").map(function (char) {
     return char.toUpperCase();
   }).join("");
 
   var firstLetter = word[0];
+  var isRealWord = wordBank[firstLetter].includes(word);
+  var isValidLength = word.length > 2;
+  var hasNotBeenFound = !(0, _board.foundWordsToArray)().includes(word);
 
-  if (wordBank[firstLetter].includes(word) && word.length > 2) {
-    //function to append found word to word list and increase score
-    (0, _foundWords.awardPoints)(word);
-  }
+  if (isRealWord && isValidLength && hasNotBeenFound) {
+    //function to append new word to word list and increase score
+    submitWord(word, true);
+  } else submitWord(word, false);
+};
 
-  clearWord();
+var submitWord = exports.submitWord = function submitWord(word, wasValid) {
+  if (wasValid) (0, _foundWords.awardPoints)(word);
+  (0, _board.resetCurrentWordField)();
 };
 
 var toggleWordSelection = function toggleWordSelection(isStartOfWord, currentTile) {
@@ -425,7 +452,7 @@ var tileSelection = exports.tileSelection = function tileSelection(e) {
   var li = e.target;
 
   //checks proximity validity of new tile selection
-  if (word.isValid(li)) {
+  if (word.isValidMove(li)) {
     word.letterNodes.forEach(function (node) {
       node.className = "selected";
     });
@@ -436,12 +463,12 @@ var tileSelection = exports.tileSelection = function tileSelection(e) {
       return isFirstLetter ? letterNode.innerHTML : letterNode.innerHTML.toLowerCase();
     });
 
-    getCurrentWordField().innerHTML = currentWordText.join("");
+    (0, _board.getCurrentWordField)().innerHTML = currentWordText.join("");
   }
 };
 
 var clearWord = exports.clearWord = function clearWord() {
-  getCurrentWordField().innerHTML = "";
+  (0, _board.getCurrentWordField)().innerHTML = "";
 };
 
 var deSelectTiles = exports.deSelectTiles = function deSelectTiles(nodeArray) {
@@ -972,8 +999,8 @@ var Word = function () {
   }
 
   _createClass(Word, [{
-    key: "isValid",
-    value: function isValid(letterNode) {
+    key: "isValidMove",
+    value: function isValidMove(letterNode) {
       var lastLetterNode = this.letterNodes[this.letterNodes.length - 1];
       var isSibling = this.isNextTo(letterNode, lastLetterNode);
       var isSelf = this.isSelf(letterNode);
