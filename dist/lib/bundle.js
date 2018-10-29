@@ -383,16 +383,15 @@ var handleTileClick = exports.handleTileClick = function handleTileClick(e) {
   var isStartOfWord = !currentWord.length;
   var currentTile = e.target;
 
-  toggleWordSelection(isStartOfWord, currentTile);
-
   if (isStartOfWord) {
     createNewWord(currentTile);
   } else {
-    isValidWord((0, _board.getCurrentWordField)().innerHTML);
+    isValidWord(currentWord, currentTile);
   }
 };
 
 var createNewWord = exports.createNewWord = function createNewWord(tile) {
+  toggleWordSelection(true, tile);
   var firstLetterNode = tile;
   firstLetterNode.className = "selected";
   word = new _word2.default();
@@ -400,7 +399,7 @@ var createNewWord = exports.createNewWord = function createNewWord(tile) {
   (0, _board.getCurrentWordField)().innerHTML = word.letterNodes[0].innerHTML;
 };
 
-var isValidWord = function isValidWord(word) {
+var isValidWord = function isValidWord(word, currentTile) {
   //Formats word for x-ref to dictionary
   word = word.split("").map(function (char) {
     return char.toUpperCase();
@@ -413,16 +412,49 @@ var isValidWord = function isValidWord(word) {
 
   if (isRealWord && isValidLength && hasNotBeenFound) {
     //function to append new word to word list and increase score
-    submitWord(word, true);
-  } else submitWord(word, false);
+    submitWord(word, currentTile, true);
+  } else submitWord(word, currentTile, false);
 };
 
-var submitWord = exports.submitWord = function submitWord(word, wasValid) {
-  if (wasValid) (0, _foundWords.awardPoints)(word);
+var submitWord = exports.submitWord = function submitWord(word, currentTile, wasValid) {
+  if (wasValid) {
+    flashTileVerdict(true);
+    (0, _foundWords.awardPoints)(word);
+
+    setTimeout(function () {
+      toggleWordSelection(false, currentTile);
+    }, 400);
+  } else {
+    flashTileVerdict(false);
+
+    setTimeout(function () {
+      toggleWordSelection(false, currentTile);
+    }, 400);
+  }
+
   (0, _board.resetCurrentWordField)();
 };
 
-var toggleWordSelection = function toggleWordSelection(isStartOfWord, currentTile) {
+var flashTileVerdict = function flashTileVerdict(verdict) {
+  if (verdict) {
+    var selectedWord = document.getElementsByClassName("selected");
+
+    while (selectedWord.length) {
+      selectedWord[0].className = "accepted";
+    }
+  } else {
+    var _selectedWord = document.getElementsByClassName("selected");
+
+    while (_selectedWord.length) {
+      _selectedWord[0].className = "rejected";
+    }
+  }
+};
+
+var toggleWordSelection = function toggleWordSelection() {
+  var isStartOfWord = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  var currentTile = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
   if (isStartOfWord) {
     //handles cases for user's first selection &
     //toggles on further selection highlighting

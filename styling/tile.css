@@ -58,3 +58,13 @@
   box-shadow: 0px 0px 20px #f5fe19;
   border: none !important;
 }
+
+.accepted {
+  box-shadow: 0px 0px 20px green;
+  border: none !important;
+}
+
+.rejected {
+  box-shadow: 0px 0px 20px red;
+  border: none !important;
+}
