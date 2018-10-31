@@ -111,17 +111,6 @@ var toggleStartButton = exports.toggleStartButton = function toggleStartButton(r
   requestType === "start" ? document.getElementById("start-button").innerHTML = "Reset" : document.getElementById("start-button").innerHTML = "Start";
 };
 
-var resetFoundWordsList = function resetFoundWordsList() {
-  var parent = getFoundWordsList();
-  var children = parent.childNodes;
-  var tail = document.getElementById("tail");
-
-  while (parent.firstChild) {
-    if (parent.firstChild === tail) break;
-    parent.removeChild(parent.firstChild);
-  }
-};
-
 var resetCurrentWordField = exports.resetCurrentWordField = function resetCurrentWordField() {
   getCurrentWordField().innerHTML = "";
 };
@@ -140,6 +129,17 @@ var getPointsField = exports.getPointsField = function getPointsField() {
 
 var getFoundWordsList = exports.getFoundWordsList = function getFoundWordsList() {
   return document.getElementById("word-list");
+};
+
+var resetFoundWordsList = function resetFoundWordsList() {
+  var parent = getFoundWordsList();
+  var children = parent.childNodes;
+  var tail = document.getElementById("tail");
+
+  while (parent.firstChild) {
+    if (parent.firstChild === tail) break;
+    parent.removeChild(parent.firstChild);
+  }
 };
 
 var foundWordsToArray = exports.foundWordsToArray = function foundWordsToArray() {
@@ -237,7 +237,7 @@ var appendWord = function appendWord(word) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.deSelectTiles = exports.clearWord = exports.tileSelection = exports.toggleTileActivation = exports.submitWord = exports.createNewWord = exports.handleTileClick = exports.deActivateTiles = exports.activateTiles = exports.createTiles = undefined;
+exports.deSelectTiles = exports.tileSelection = exports.toggleTilesOff = exports.toggleTilesOn = exports.submitWord = exports.createNewWord = exports.handleTileClick = exports.deActivateTiles = exports.activateTiles = exports.createTiles = undefined;
 
 var _word = __webpack_require__(/*! ./word */ "./lib/word.js");
 
@@ -361,8 +361,8 @@ var createTiles = exports.createTiles = function createTiles() {
 var activateTiles = exports.activateTiles = function activateTiles() {
   document.querySelectorAll("#tiles li").forEach(function (li) {
     li.className = "false";
-    li.addEventListener("mouseover", toggleTileActivation);
-    li.addEventListener("mouseout", toggleTileActivation);
+    li.addEventListener("mouseover", toggleTilesOn);
+    li.addEventListener("mouseout", toggleTilesOff);
     li.addEventListener("mousedown", handleTileClick);
   });
 };
@@ -370,9 +370,9 @@ var activateTiles = exports.activateTiles = function activateTiles() {
 var deActivateTiles = exports.deActivateTiles = function deActivateTiles() {
   document.querySelectorAll("#tiles li").forEach(function (li) {
     li.className = "inactive";
-    li.removeEventListener("mouseover", toggleTileActivation);
+    li.removeEventListener("mouseover", toggleTilesOn);
     li.removeEventListener("mouseover", tileSelection);
-    li.removeEventListener("mouseout", toggleTileActivation);
+    li.removeEventListener("mouseout", toggleTilesOff);
     li.removeEventListener("mousedown", handleTileClick);
   });
 };
@@ -431,7 +431,6 @@ var submitWord = exports.submitWord = function submitWord(word, currentTile, was
       toggleWordSelection(false, currentTile);
     }, 200);
   }
-
   (0, _board.resetCurrentWordField)();
 };
 
@@ -464,17 +463,18 @@ var toggleWordSelection = function toggleWordSelection() {
     //handles cases for user's first selection &
     //toggles on further selection highlighting
     tiles.forEach(function (li) {
-      li.removeEventListener("mouseover", toggleTileActivation);
-      li.removeEventListener("mouseout", toggleTileActivation);
+      li.removeEventListener("mouseover", toggleTilesOn);
+      li.removeEventListener("mouseout", toggleTilesOff);
       li.addEventListener("mouseover", tileSelection);
     });
   } else {
+    (0, _board.resetCurrentWordField)();
     //toggles off selection highlighting & activation highlighting is toggled on
     tiles.forEach(function (li) {
-      li.className = currentTile === li ? "focused" : "false";
+      li.className = "false";
       li.removeEventListener("mouseover", tileSelection);
-      li.addEventListener("mouseover", toggleTileActivation);
-      li.addEventListener("mouseout", toggleTileActivation);
+      li.addEventListener("mouseover", toggleTilesOn);
+      li.addEventListener("mouseout", toggleTilesOff);
     });
   }
 };
@@ -486,10 +486,16 @@ var resetAllTiles = function resetAllTiles() {
   });
 };
 
-var toggleTileActivation = exports.toggleTileActivation = function toggleTileActivation(e) {
-  var li = e.target;
+var toggleTilesOn = exports.toggleTilesOn = function toggleTilesOn(e) {
+  var currentTile = e.target;
 
-  if (li.className === "false") li.className = "focused";else if (li.className === "focused") li.className = "false";
+  if (currentTile.className === "false") currentTile.className = "focused";
+};
+
+var toggleTilesOff = exports.toggleTilesOff = function toggleTilesOff(e) {
+  var currentTile = e.target;
+
+  if (currentTile.className === "focused") currentTile.className = "false";
 };
 
 var tileSelection = exports.tileSelection = function tileSelection(e) {
@@ -509,10 +515,6 @@ var tileSelection = exports.tileSelection = function tileSelection(e) {
 
     (0, _board.getCurrentWordField)().innerHTML = currentWordText.join("");
   }
-};
-
-var clearWord = exports.clearWord = function clearWord() {
-  (0, _board.getCurrentWordField)().innerHTML = "";
 };
 
 var deSelectTiles = exports.deSelectTiles = function deSelectTiles(nodeArray) {
