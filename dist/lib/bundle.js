@@ -84,11 +84,13 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.foundWordsToArray = exports.getFoundWordsList = exports.getPointsField = exports.getCurrentWordField = exports.resetCurrentWordField = exports.toggleStartButton = exports.startReset = undefined;
+exports.foundWordsToArray = exports.getFoundWordsList = exports.getPointsField = exports.getCurrentWordField = exports.getStartButtonField = exports.resetCurrentWordField = exports.toggleStartButton = exports.startReset = undefined;
 
 var _tile = __webpack_require__(/*! ./tile */ "./lib/tile.js");
 
 var _timer = __webpack_require__(/*! ./timer */ "./lib/timer.js");
+
+var _music = __webpack_require__(/*! ./music */ "./lib/music.js");
 
 var startReset = exports.startReset = function startReset() {
   document.getElementById("start-button").onclick = function () {
@@ -97,6 +99,7 @@ var startReset = exports.startReset = function startReset() {
     resetScore();
     resetFoundWordsList();
     toggleStartButton("start");
+    (0, _music.playMusic)();
     (0, _tile.createTiles)();
     activateGame();
   };
@@ -108,7 +111,7 @@ var activateGame = function activateGame() {
 };
 
 var toggleStartButton = exports.toggleStartButton = function toggleStartButton(requestType) {
-  requestType === "start" ? document.getElementById("start-button").innerHTML = "Reset" : document.getElementById("start-button").innerHTML = "Start";
+  requestType === "start" ? getStartButtonField().innerHTML = "Reset" : getStartButtonField().innerHTML = "Start";
 };
 
 var resetCurrentWordField = exports.resetCurrentWordField = function resetCurrentWordField() {
@@ -117,6 +120,10 @@ var resetCurrentWordField = exports.resetCurrentWordField = function resetCurren
 
 var resetScore = function resetScore() {
   getPointsField().innerHTML = "Score: 0";
+};
+
+var getStartButtonField = exports.getStartButtonField = function getStartButtonField() {
+  return document.getElementById("start-button");
 };
 
 var getCurrentWordField = exports.getCurrentWordField = function getCurrentWordField() {
@@ -220,6 +227,30 @@ var appendWord = function appendWord(word) {
   newChild.appendChild(nodeText);
 
   (0, _board.getFoundWordsList)().insertBefore(newChild, foundWordsTail);
+};
+
+/***/ }),
+
+/***/ "./lib/music.js":
+/*!**********************!*\
+  !*** ./lib/music.js ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var getMusicField = function getMusicField() {
+  return document.getElementById("myAudio");
+};
+
+var playMusic = exports.playMusic = function playMusic() {
+  var music = getMusicField();
+  music.play();
 };
 
 /***/ }),
