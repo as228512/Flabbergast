@@ -64,7 +64,7 @@ input[type="button"]:focus {
 
 .word-list-heading,
 .instructions-heading {
-  margin-top: 10px;
+  margin-top: 5%;
   margin-left: 10px;
   text-align: left;
   border-bottom: 2px solid rgb(226, 226, 226);
