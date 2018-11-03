@@ -5,7 +5,7 @@ const path = require("path");
 module.exports = {
   mode: "development",
   context: __dirname,
-  entry: "./lib/canvas.js",
+  entry: "./lib/main.js",
   output: {
     filename: "./lib/bundle.js"
   },
