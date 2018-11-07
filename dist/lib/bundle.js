@@ -333,9 +333,9 @@ var _board = __webpack_require__(/*! ./board */ "./lib/board.js");
 
 var _board2 = _interopRequireDefault(_board);
 
-var _timer_util = __webpack_require__(/*! ./util/timer_util */ "./lib/util/timer_util.js");
+var _game_util = __webpack_require__(/*! ./util/game_util */ "./lib/util/game_util.js");
 
-var gameUtil = _interopRequireWildcard(_timer_util);
+var gameUtil = _interopRequireWildcard(_game_util);
 
 var _board_util = __webpack_require__(/*! ./util/board_util */ "./lib/util/board_util.js");
 
@@ -687,6 +687,31 @@ var foundWordsToArray = exports.foundWordsToArray = function foundWordsToArray()
 
 /***/ }),
 
+/***/ "./lib/util/game_util.js":
+/*!*******************************!*\
+  !*** ./lib/util/game_util.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var getCurrentTime = exports.getCurrentTime = function getCurrentTime() {
+  var time = getTimerField();
+
+  return Number(time.innerHTML.replace(/[^\d]/g, ""));
+};
+
+var getTimerField = exports.getTimerField = function getTimerField() {
+  return document.getElementsByClassName("timer")[0];
+};
+
+/***/ }),
+
 /***/ "./lib/util/tile_util.js":
 /*!*******************************!*\
   !*** ./lib/util/tile_util.js ***!
@@ -741,17 +766,6 @@ var finalSweep = exports.finalSweep = function finalSweep() {
 var oldVersionTiles = exports.oldVersionTiles = [["R", "I", "F", "O", "B", "X"], ["I", "F", "E", "H", "E", "Y"], ["D", "E", "N", "O", "W", "S"], ["U", "T", "O", "K", "N", "D"], ["H", "M", "S", "R", "A", "O"], ["L", "U", "P", "E", "T", "S"], ["A", "C", "I", "T", "O", "A"], ["Y", "L", "G", "K", "U", "E"], ["Qu", "B", "M", "J", "O", "A"], ["E", "H", "I", "S", "P", "N"], ["V", "E", "T", "I", "G", "N"], ["B", "A", "L", "I", "Y", "T"], ["E", "Z", "A", "V", "N", "D"], ["R", "A", "L", "E", "S", "C"], ["U", "W", "I", "L", "R", "G"], ["P", "A", "C", "E", "M", "D"]];
 
 var newVersionTiles = exports.newVersionTiles = [["A", "A", "E", "E", "G", "N"], ["E", "L", "R", "T", "T", "Y"], ["A", "O", "O", "T", "T", "W"], ["A", "B", "B", "J", "O", "O"], ["E", "H", "R", "T", "V", "W"], ["C", "I", "M", "O", "T", "V"], ["D", "I", "S", "T", "T", "Y"], ["E", "I", "O", "S", "S", "T"], ["D", "E", "L", "R", "V", "Y"], ["A", "C", "H", "O", "P", "S"], ["H", "I", "M", "N", "Qu", "U"], ["E", "E", "I", "N", "S", "U"], ["E", "E", "G", "H", "N", "W"], ["A", "F", "F", "K", "P", "S"], ["H", "L", "N", "N", "R", "Z"], ["D", "E", "I", "L", "R", "X"]];
-
-/***/ }),
-
-/***/ "./lib/util/timer_util.js":
-/*!********************************!*\
-  !*** ./lib/util/timer_util.js ***!
-  \********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open '/Users/andrewschumacher/Desktop/Flabbergast/lib/util/timer_util.js'");
 
 /***/ }),
 
