@@ -163,11 +163,11 @@ var Board = function () {
     }
   }, {
     key: "deActivateTiles",
-    value: function deActivateTiles() {
+    value: function deActivateTiles(isGameOver) {
       var _this2 = this;
 
       this.tileSet.forEach(function (tile) {
-        tile.deActivateTile();
+        tile.deActivateTile(isGameOver);
         tile.tileEl.removeEventListener("mouseover", _this2.selectTile);
         tile.tileEl.removeEventListener("mousedown", _this2.handleTileClick);
       });
@@ -358,7 +358,9 @@ var Game = function () {
     this.board = new _board2.default();
     this.music = new _music2.default();
     this.time = gameUtil.getTimerField();
-    this.timerIntervalId = null;
+    this.count = 3;
+    this.currentDiagnal = 1;
+    this.intervalId = null;
   }
 
   _createClass(Game, [{
@@ -371,22 +373,51 @@ var Game = function () {
       startButton.onclick = function () {
         boardUtil.toggleStartButton("Reset");
         _this.resetGame();
-        _this.music.playMusic();
-        _this.board.generateRandomTiles();
-        _this.playGame();
+        _this.countDown();
       };
     }
   }, {
-    key: "resetGame",
-    value: function resetGame() {
-      this.resetTimer();
-      boardUtil.resetCurrentWord();
-      boardUtil.resetScore();
-      boardUtil.resetFoundWordList();
+    key: "countDown",
+    value: function countDown() {
+      clearInterval(this.intervalId);
+      this.intervalId = setInterval(this.countingDown.bind(this), 333);
+    }
+  }, {
+    key: "countingDown",
+    value: function countingDown() {
+      switch (this.currentDiagnal) {
+        case 1:
+          if (this.count === 3) gameUtil.flash3(this.currentDiagnal);else if (this.count === 2) gameUtil.flash2(this.currentDiagnal);else if (this.count === 1) gameUtil.flash1(this.currentDiagnal);
+
+          this.currentDiagnal++;
+          break;
+
+        case 2:
+          if (this.count === 3) gameUtil.flash3(this.currentDiagnal);else if (this.count === 2) gameUtil.flash2(this.currentDiagnal);else if (this.count === 1) gameUtil.flash1(this.currentDiagnal);
+
+          this.currentDiagnal++;
+          break;
+
+        case 3:
+          if (this.count === 3) gameUtil.flash3(this.currentDiagnal);else if (this.count === 2) gameUtil.flash2(this.currentDiagnal);else if (this.count === 1) gameUtil.flash1(this.currentDiagnal);
+
+          this.currentDiagnal = this.count === 1 ? 0 : 1;
+          this.count--;
+          break;
+
+        default:
+          //when countdown is finished, default activates game
+          gameUtil.cleanUpLastSequence(1);
+          clearInterval(this.intervalId);
+          this.intervalId = null;
+          this.playGame();
+      }
     }
   }, {
     key: "playGame",
     value: function playGame() {
+      this.music.playMusic();
+      this.board.generateRandomTiles();
       this.startTimer();
       this.board.activateTiles();
     }
@@ -394,20 +425,31 @@ var Game = function () {
     key: "gameOver",
     value: function gameOver() {
       this.stopTimer();
-      this.board.deActivateTiles();
+      this.board.deActivateTiles(true);
       boardUtil.toggleStartButton("Start");
       tileUtil.finalSweep();
     }
   }, {
+    key: "resetGame",
+    value: function resetGame() {
+      this.count = 3;
+      this.currentDiagnal = 1;
+      this.board.deActivateTiles(true);
+      this.resetTimer();
+      boardUtil.resetCurrentWord();
+      boardUtil.resetScore();
+      boardUtil.resetFoundWordList();
+    }
+  }, {
     key: "startTimer",
     value: function startTimer() {
-      this.timerIntervalId = setInterval(this.tickTimer.bind(this), 1000);
+      this.intervalId = setInterval(this.tickTimer.bind(this), 1000);
     }
   }, {
     key: "stopTimer",
     value: function stopTimer() {
-      clearInterval(this.timerIntervalId);
-      this.timerIntervalId = null;
+      clearInterval(this.intervalId);
+      this.intervalId = null;
     }
   }, {
     key: "resetTimer",
@@ -544,7 +586,8 @@ var Tile = function () {
     }
   }, {
     key: "deActivateTile",
-    value: function deActivateTile() {
+    value: function deActivateTile(isGameOver) {
+      if (isGameOver) this.tileEl.innerHTML = "?";
       this.tileEl.className = "inactive";
       this.tileEl.removeEventListener("mouseover", this.toggleTilesOn);
       this.tileEl.removeEventListener("mouseout", this.toggleTilesOff);
@@ -709,6 +752,98 @@ var getCurrentTime = exports.getCurrentTime = function getCurrentTime() {
 var getTimerField = exports.getTimerField = function getTimerField() {
   return document.getElementsByClassName("timer")[0];
 };
+
+var getCountDownEls = exports.getCountDownEls = function getCountDownEls() {
+  var allTileEls = document.querySelectorAll("#tiles li");
+  var counterElValues = { 1: [2, 5], 2: [4, 7, 10, 13], 3: [12, 15] };
+  var countDownEls = { 1: [], 2: [], 3: [] };
+  var currentKey = 1;
+  var keyMatch = void 0;
+
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = allTileEls[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var el = _step.value;
+
+      if (counterElValues[1].includes(el.value)) keyMatch = 1;else if (counterElValues[2].includes(el.value)) keyMatch = 2;else if (counterElValues[3].includes(el.value)) keyMatch = 3;else continue;
+
+      countDownEls[keyMatch].push(el);
+
+      if (currentKey === 2 && countDownEls[currentKey].length === 4) {
+        currentKey++;
+      } else if (currentKey !== 2 && countDownEls[currentKey].length === 2) {
+        currentKey++;
+      }
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  return countDownEls;
+};
+
+// export const flashStartSequence = (currentDiagnal, count) => {
+//   switch (count) {
+//     case 3:
+//       break;
+//     case 2:
+//       break;
+//     case 1:
+//       break;
+//   }
+// };
+
+var flash3 = exports.flash3 = function flash3(currentDiagnal) {
+  cleanUpLastSequence(currentDiagnal);
+  flashSequence(currentDiagnal, "3", "red-count");
+};
+
+var flash2 = exports.flash2 = function flash2(currentDiagnal) {
+  cleanUpLastSequence(currentDiagnal);
+  flashSequence(currentDiagnal, "2", "yellow-count");
+};
+
+var flash1 = exports.flash1 = function flash1(currentDiagnal) {
+  cleanUpLastSequence(currentDiagnal);
+  flashSequence(currentDiagnal, "1", "green-count");
+};
+
+var countDownEls = void 0;
+var cleanUpLastSequence = exports.cleanUpLastSequence = function cleanUpLastSequence(currentDiagnal) {
+  countDownEls = countDownEls ? countDownEls : getCountDownEls();
+  var cleanUpCount = { 1: 3, 2: 1, 3: 2 };
+  var diagnalToCleanUp = cleanUpCount[currentDiagnal];
+
+  countDownEls[diagnalToCleanUp].forEach(function (el) {
+    flashSequence(diagnalToCleanUp, "?", "inactive");
+  });
+};
+
+var flashSequence = function flashSequence(currentDiagnal, text, className) {
+  countDownEls[currentDiagnal].forEach(function (el) {
+    el.innerHTML = text;
+    el.className = className;
+  });
+};
+
+// const flashInputs = (el, text, className) => {
+//   el.innerHTML = text;
+//   el.className = className;
+// };
 
 /***/ }),
 

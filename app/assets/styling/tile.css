@@ -45,6 +45,87 @@
   ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
+.red-count {
+  cursor: default !important;
+  color: white !important;
+  background: rgb(226, 226, 226) !important; /* Old browsers */
+  background: -moz-linear-gradient(
+    top,
+    rgba(226, 226, 226, 1) 0%,
+    #bd0000 11%,
+    #790000 76%,
+    rgba(254, 254, 254, 1) 99%
+  ) !important; /* FF3.6-15 */
+  background: -webkit-linear-gradient(
+    top,
+    rgba(226, 226, 226, 1) 0%,
+    #bd0000 11%,
+    #790000 76%,
+    rgba(254, 254, 254, 1) 99%
+  ) !important; /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(
+    to bottom,
+    rgba(226, 226, 226, 1) 0%,
+    #bd0000 11%,
+    #790000 76%,
+    rgba(254, 254, 254, 1) 99%
+  ) !important; /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+
+.yellow-count {
+  cursor: default !important;
+  color: white !important;
+  background: rgb(226, 226, 226) !important; /* Old browsers */
+  background: -moz-linear-gradient(
+    top,
+    rgba(226, 226, 226, 1) 0%,
+    #b1b900 11%,
+    #a8af00 76%,
+    rgba(254, 254, 254, 1) 99%
+  ) !important; /* FF3.6-15 */
+  background: -webkit-linear-gradient(
+    top,
+    rgba(226, 226, 226, 1) 0%,
+    #b1b900 11%,
+    #a8af00 76%,
+    rgba(254, 254, 254, 1) 99%
+  ) !important; /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(
+    to bottom,
+    rgba(226, 226, 226, 1) 0%,
+    #b1b900 11%,
+    #a8af00 76%,
+    rgba(254, 254, 254, 1) 99%
+  ) !important; /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+
+.green-count {
+  cursor: default !important;
+  color: white !important;
+  background: rgb(226, 226, 226) !important; /* Old browsers */
+  background: -moz-linear-gradient(
+    top,
+    rgba(226, 226, 226, 1) 0%,
+    rgba(8, 82, 7, 1) 11%,
+    rgba(4, 183, 19, 1) 76%,
+    rgba(254, 254, 254, 1) 99%
+  ) !important; /* FF3.6-15 */
+  background: -webkit-linear-gradient(
+    top,
+    rgba(226, 226, 226, 1) 0%,
+    rgba(8, 82, 7, 1) 11%,
+    rgba(4, 183, 19, 1) 76%,
+    rgba(254, 254, 254, 1) 99%
+  ) !important; /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(
+    to bottom,
+    rgba(226, 226, 226, 1) 0%,
+    rgba(8, 82, 7, 1) 11%,
+    rgba(4, 183, 19, 1) 76%,
+    rgba(254, 254, 254, 1) 99%
+  ) !important; /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+
 .inactive {
   cursor: default !important;
 }
