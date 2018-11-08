@@ -377,6 +377,7 @@ var Game = function () {
     this.time = gameUtil.getTimerField();
     this.count = 3;
     this.currentDiagnal = 1;
+    this.isLastDiagnal = false;
     this.intervalId = null;
   }
 
@@ -397,28 +398,22 @@ var Game = function () {
     key: "countDown",
     value: function countDown() {
       clearInterval(this.intervalId);
-      this.intervalId = setInterval(this.countingDown.bind(this), 333);
+      this.intervalId = setInterval(this.countingDown.bind(this), 100);
     }
   }, {
     key: "countingDown",
     value: function countingDown() {
-      switch (this.currentDiagnal) {
-        case 1:
-          if (this.count === 3) gameUtil.flash3(this.currentDiagnal);else if (this.count === 2) gameUtil.flash2(this.currentDiagnal);else if (this.count === 1) gameUtil.flash1(this.currentDiagnal);
-
+      switch (this.isLastDiagnal) {
+        case false:
+          gameUtil.flashStartSequence(this.currentDiagnal, this.count);
           this.currentDiagnal++;
+          if (this.currentDiagnal === 7) this.isLastDiagnal = true;
           break;
 
-        case 2:
-          if (this.count === 3) gameUtil.flash3(this.currentDiagnal);else if (this.count === 2) gameUtil.flash2(this.currentDiagnal);else if (this.count === 1) gameUtil.flash1(this.currentDiagnal);
-
-          this.currentDiagnal++;
-          break;
-
-        case 3:
-          if (this.count === 3) gameUtil.flash3(this.currentDiagnal);else if (this.count === 2) gameUtil.flash2(this.currentDiagnal);else if (this.count === 1) gameUtil.flash1(this.currentDiagnal);
-
-          this.currentDiagnal = this.count === 1 ? 0 : 1;
+        case true:
+          gameUtil.flashStartSequence(this.currentDiagnal, this.count);
+          this.currentDiagnal = 1;
+          this.isLastDiagnal = this.count === 1 ? "Will Hit Default" : false;
           this.count--;
           break;
 
@@ -451,7 +446,9 @@ var Game = function () {
     value: function resetGame() {
       this.count = 3;
       this.currentDiagnal = 1;
+      this.isLastDiagnal = false;
       this.board.deActivateTiles(true);
+      this.music.stopMusic();
       this.resetTimer();
       boardUtil.resetCurrentWord();
       boardUtil.resetScore();
@@ -548,9 +545,14 @@ var Music = function () {
   _createClass(Music, [{
     key: "playMusic",
     value: function playMusic() {
-      this.audio.currentTime = 0;
       this.audio.volume = 0.2;
       this.audio.play();
+    }
+  }, {
+    key: "stopMusic",
+    value: function stopMusic() {
+      this.audio.currentTime = 0;
+      this.audio.pause();
     }
   }]);
 
@@ -772,12 +774,37 @@ var getTimerField = exports.getTimerField = function getTimerField() {
   return document.getElementsByClassName("timer")[0];
 };
 
-var getCountDownEls = exports.getCountDownEls = function getCountDownEls() {
+var leftList = {
+  1: [1],
+  2: [2, 5],
+  3: [3, 6, 9],
+  4: [4, 7, 10, 13],
+  5: [8, 11, 14],
+  6: [12, 15],
+  7: [16]
+};
+
+var rightList = {
+  1: [4],
+  2: [3, 8],
+  3: [2, 7, 12],
+  4: [1, 6, 11, 16],
+  5: [5, 10, 15],
+  6: [9, 14],
+  7: [13]
+};
+
+var findMatch = function findMatch(el, valueList) {
+  for (var i = 1; i < 7; i++) {
+    if (valueList[i].includes(el.value)) return i;
+  }
+  return 7;
+};
+
+var getCountDownEls = exports.getCountDownEls = function getCountDownEls(diagnalList) {
   var allTileEls = document.querySelectorAll("#tiles li");
-  var counterElValues = { 1: [2, 5], 2: [4, 7, 10, 13], 3: [12, 15] };
-  var countDownEls = { 1: [], 2: [], 3: [] };
-  var currentKey = 1;
-  var keyMatch = void 0;
+
+  var countDownEls = {};
 
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
@@ -787,15 +814,9 @@ var getCountDownEls = exports.getCountDownEls = function getCountDownEls() {
     for (var _iterator = allTileEls[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
       var el = _step.value;
 
-      if (counterElValues[1].includes(el.value)) keyMatch = 1;else if (counterElValues[2].includes(el.value)) keyMatch = 2;else if (counterElValues[3].includes(el.value)) keyMatch = 3;else continue;
+      var match = findMatch(el, diagnalList);
 
-      countDownEls[keyMatch].push(el);
-
-      if (currentKey === 2 && countDownEls[currentKey].length === 4) {
-        currentKey++;
-      } else if (currentKey !== 2 && countDownEls[currentKey].length === 2) {
-        currentKey++;
-      }
+      countDownEls[match] ? countDownEls[match].push(el) : countDownEls[match] = [el];
     }
   } catch (err) {
     _didIteratorError = true;
@@ -815,16 +836,18 @@ var getCountDownEls = exports.getCountDownEls = function getCountDownEls() {
   return countDownEls;
 };
 
-// export const flashStartSequence = (currentDiagnal, count) => {
-//   switch (count) {
-//     case 3:
-//       break;
-//     case 2:
-//       break;
-//     case 1:
-//       break;
-//   }
-// };
+var flashStartSequence = exports.flashStartSequence = function flashStartSequence(currentDiagnal, count) {
+  switch (count) {
+    case 3:
+      flash3(currentDiagnal);
+      break;
+    case 2:
+      flash2(currentDiagnal);
+      break;
+    case 1:
+      flash1(currentDiagnal);
+  }
+};
 
 var flash3 = exports.flash3 = function flash3(currentDiagnal) {
   cleanUpLastSequence(currentDiagnal);
@@ -832,7 +855,7 @@ var flash3 = exports.flash3 = function flash3(currentDiagnal) {
 };
 
 var flash2 = exports.flash2 = function flash2(currentDiagnal) {
-  cleanUpLastSequence(currentDiagnal);
+  cleanUpLastSequence(currentDiagnal, rightList);
   flashSequence(currentDiagnal, "2", "yellow-count");
 };
 
@@ -841,15 +864,27 @@ var flash1 = exports.flash1 = function flash1(currentDiagnal) {
   flashSequence(currentDiagnal, "1", "green-count");
 };
 
-var countDownEls = void 0;
+var countDownEls = void 0,
+    cleanUpLast = void 0;
 var cleanUpLastSequence = exports.cleanUpLastSequence = function cleanUpLastSequence(currentDiagnal) {
-  countDownEls = countDownEls ? countDownEls : getCountDownEls();
-  var cleanUpCount = { 1: 3, 2: 1, 3: 2 };
-  var diagnalToCleanUp = cleanUpCount[currentDiagnal];
+  var diagnalList = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : leftList;
 
-  countDownEls[diagnalToCleanUp].forEach(function (el) {
-    flashSequence(diagnalToCleanUp, "?", "inactive");
-  });
+  if (currentDiagnal === 1 && cleanUpLast) {
+    cleanUpLast.innerHTML = "?";
+    cleanUpLast.className = "inactive";
+  }
+
+  countDownEls = getCountDownEls(diagnalList);
+  cleanUpLast = countDownEls[7];
+
+  if (!currentDiagnal === 1) {
+    var cleanUpCount = { 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 7: 6 };
+    var diagnalToCleanUp = cleanUpCount[currentDiagnal];
+
+    countDownEls[diagnalToCleanUp].forEach(function (el) {
+      flashSequence(diagnalToCleanUp, "?", "inactive");
+    });
+  }
 };
 
 var flashSequence = function flashSequence(currentDiagnal, text, className) {
@@ -858,11 +893,6 @@ var flashSequence = function flashSequence(currentDiagnal, text, className) {
     el.className = className;
   });
 };
-
-// const flashInputs = (el, text, className) => {
-//   el.innerHTML = text;
-//   el.className = className;
-// };
 
 /***/ }),
 
