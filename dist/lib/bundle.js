@@ -398,7 +398,11 @@ var Game = function () {
     key: "countDown",
     value: function countDown() {
       clearInterval(this.intervalId);
+<<<<<<< HEAD
       this.intervalId = setInterval(this.countingDown.bind(this), 140);
+=======
+      this.intervalId = setInterval(this.countingDown.bind(this), 100);
+>>>>>>> 1fec9e2b4f4171efd0f00f80313e0b331f66b4cf
     }
   }, {
     key: "countingDown",
