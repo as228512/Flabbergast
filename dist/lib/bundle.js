@@ -257,10 +257,10 @@ var Board = function () {
   }, {
     key: "selectTile",
     value: function selectTile(e) {
-      var tile = e.target;
+      var tileEl = e.target;
 
-      //checks proximity validity of new tile selection
-      if (this.word.isValidMove(tile)) {
+      //checks proximity validity of new tileEl selection
+      if (this.word.isValidMove(tileEl)) {
         this.word.letterNodes.forEach(function (tileEl) {
           tileEl.className = "selected";
         });
@@ -269,7 +269,24 @@ var Board = function () {
         var letters = wordUtil.toLowerCase(this.word.letterNodes);
 
         boardUtil.getCurrentWordField().innerHTML = letters.join("");
+      } else {
+        this.word.rejectMove(tileEl);
+        this.disAllowClick(tileEl);
       }
+    }
+  }, {
+    key: "disAllowClick",
+    value: function disAllowClick(tileEl) {
+      var _this4 = this;
+
+      tileEl.removeEventListener("mousedown", this.handleTileClick);
+
+      var removeListener = function removeListener() {
+        tileEl.addEventListener("mousedown", _this4.handleTileClick);
+        tileEl.removeEventListener("mouseout", removeListener);
+      };
+
+      tileEl.addEventListener("mouseout", removeListener);
     }
   }, {
     key: "prepForNewWord",
@@ -586,7 +603,9 @@ var Tile = function () {
     }
   }, {
     key: "deActivateTile",
-    value: function deActivateTile(isGameOver) {
+    value: function deActivateTile() {
+      var isGameOver = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
       if (isGameOver) this.tileEl.innerHTML = "?";
       this.tileEl.className = "inactive";
       this.tileEl.removeEventListener("mouseover", this.toggleTilesOn);
@@ -1578,6 +1597,17 @@ var Word = function () {
       letterNodeArray.forEach(function (letterNode) {
         letterNode.className = "false";
       });
+    }
+  }, {
+    key: "rejectMove",
+    value: function rejectMove(letterNode) {
+      var removeListener = function removeListener() {
+        letterNode.className = "false";
+        letterNode.removeEventListener("mouseout", removeListener);
+      };
+
+      letterNode.className = "inactive";
+      letterNode.addEventListener("mouseout", removeListener);
     }
   }, {
     key: "addLetter",
