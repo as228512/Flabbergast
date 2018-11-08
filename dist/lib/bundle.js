@@ -875,15 +875,9 @@ var cleanUpLastSequence = exports.cleanUpLastSequence = function cleanUpLastSequ
   }
 
   countDownEls = getCountDownEls(diagnalList);
-<<<<<<< HEAD
   cleanUpLast = countDownEls[7][0];
 
   if (currentDiagnal !== 1) {
-=======
-  cleanUpLast = countDownEls[7];
-
-  if (!currentDiagnal === 1) {
->>>>>>> 1fec9e2b4f4171efd0f00f80313e0b331f66b4cf
     var cleanUpCount = { 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 7: 6 };
     var diagnalToCleanUp = cleanUpCount[currentDiagnal];
 
