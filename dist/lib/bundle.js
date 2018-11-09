@@ -562,13 +562,13 @@ var Music = function () {
     key: "playRejectAudio",
     value: function playRejectAudio() {
       this.rejectAudio.currentTime = 0;
-      this.rejectAudio.volume = 0.1;
+      this.rejectAudio.volume = 0.2;
       this.rejectAudio.play();
     }
   }, {
     key: "playMusic",
     value: function playMusic() {
-      this.backgroundAudio.volume = 0.2;
+      this.backgroundAudio.volume = 0.4;
       this.backgroundAudio.play();
     }
   }, {
