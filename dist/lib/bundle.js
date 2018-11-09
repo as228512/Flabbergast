@@ -229,6 +229,7 @@ var Board = function () {
         this.awardPoints(word);
         setTimeout(this.toggleTileSelectStatus, 300);
       } else {
+        this.music.playRejectAudio();
         selectedWord.forEach(function (tile) {
           tile.flashTileVerdict(false);
         });
@@ -547,6 +548,7 @@ var Music = function () {
 
     this.backgroundAudio = document.getElementById("backgroundAudio");
     this.successAudio = document.getElementById("successAudio");
+    this.rejectAudio = document.getElementById("rejectAudio");
   }
 
   _createClass(Music, [{
@@ -555,6 +557,13 @@ var Music = function () {
       this.successAudio.currentTime = 0;
       this.successAudio.volume = 0.1;
       this.successAudio.play();
+    }
+  }, {
+    key: "playRejectAudio",
+    value: function playRejectAudio() {
+      this.rejectAudio.currentTime = 0;
+      this.rejectAudio.volume = 0.1;
+      this.rejectAudio.play();
     }
   }, {
     key: "playMusic",
