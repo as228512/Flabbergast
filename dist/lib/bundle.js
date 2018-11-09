@@ -95,6 +95,10 @@ var _word = __webpack_require__(/*! ./word */ "./lib/word.js");
 
 var _word2 = _interopRequireDefault(_word);
 
+var _music = __webpack_require__(/*! ./music */ "./lib/music.js");
+
+var _music2 = _interopRequireDefault(_music);
+
 var _board_util = __webpack_require__(/*! ./util/board_util */ "./lib/util/board_util.js");
 
 var boardUtil = _interopRequireWildcard(_board_util);
@@ -121,6 +125,7 @@ var Board = function () {
 
     this.tileSet = [];
     this.word = null;
+    this.music = new _music2.default();
     this.toggleTileSelectStatus = this.toggleTileSelectStatus.bind(this);
     this.selectTile = this.selectTile.bind(this);
     this.handleTileClick = this.handleTileClick.bind(this);
@@ -220,6 +225,7 @@ var Board = function () {
           tile.flashTileVerdict(true);
         });
 
+        this.music.playSuccessAudio();
         this.awardPoints(word);
         setTimeout(this.toggleTileSelectStatus, 300);
       } else {
@@ -539,20 +545,28 @@ var Music = function () {
   function Music() {
     _classCallCheck(this, Music);
 
-    this.audio = document.getElementById("myAudio");
+    this.backgroundAudio = document.getElementById("backgroundAudio");
+    this.successAudio = document.getElementById("successAudio");
   }
 
   _createClass(Music, [{
+    key: "playSuccessAudio",
+    value: function playSuccessAudio() {
+      this.successAudio.currentTime = 0;
+      this.successAudio.volume = 0.1;
+      this.successAudio.play();
+    }
+  }, {
     key: "playMusic",
     value: function playMusic() {
-      this.audio.volume = 0.2;
-      this.audio.play();
+      this.backgroundAudio.volume = 0.2;
+      this.backgroundAudio.play();
     }
   }, {
     key: "stopMusic",
     value: function stopMusic() {
-      this.audio.currentTime = 0;
-      this.audio.pause();
+      this.backgroundAudio.currentTime = 0;
+      this.backgroundAudio.pause();
     }
   }]);
 
