@@ -412,6 +412,8 @@ var Game = function () {
     value: function countingDown() {
       switch (this.isLastDiagnal) {
         case false:
+          if (this.count === 3 && this.currentDiagnal === 1) this.music.playThreeAudio();else if (this.count === 2 && this.currentDiagnal === 1) this.music.playTwoAudio();else if (this.count === 1 && this.currentDiagnal === 1) this.music.playOneAudio();
+
           gameUtil.flashStartSequence(this.currentDiagnal, this.count);
           this.currentDiagnal++;
           if (this.currentDiagnal === 7) this.isLastDiagnal = true;
@@ -435,6 +437,7 @@ var Game = function () {
   }, {
     key: "playGame",
     value: function playGame() {
+      this.music.playGoAudio();
       this.music.playMusic();
       this.board.generateRandomTiles();
       this.startTimer();
@@ -443,6 +446,7 @@ var Game = function () {
   }, {
     key: "gameOver",
     value: function gameOver() {
+      this.music.playGameOverAudio();
       this.stopTimer();
       this.board.deActivateTiles(true);
       boardUtil.toggleStartButton("Start");
@@ -549,6 +553,11 @@ var Music = function () {
     this.backgroundAudio = document.getElementById("backgroundAudio");
     this.successAudio = document.getElementById("successAudio");
     this.rejectAudio = document.getElementById("rejectAudio");
+    this.threeAudio = document.getElementById("threeAudio");
+    this.twoAudio = document.getElementById("twoAudio");
+    this.oneAudio = document.getElementById("oneAudio");
+    this.goAudio = document.getElementById("goAudio");
+    this.gameOverAudio = document.getElementById("gameOverAudio");
   }
 
   _createClass(Music, [{
@@ -564,6 +573,41 @@ var Music = function () {
       this.rejectAudio.currentTime = 0;
       this.rejectAudio.volume = 0.2;
       this.rejectAudio.play();
+    }
+  }, {
+    key: "playThreeAudio",
+    value: function playThreeAudio() {
+      this.threeAudio.currentTime = 0;
+      this.threeAudio.volume = 0.2;
+      this.threeAudio.play();
+    }
+  }, {
+    key: "playTwoAudio",
+    value: function playTwoAudio() {
+      this.twoAudio.currentTime = 0;
+      this.twoAudio.volume = 0.2;
+      this.twoAudio.play();
+    }
+  }, {
+    key: "playOneAudio",
+    value: function playOneAudio() {
+      this.oneAudio.currentTime = 0;
+      this.oneAudio.volume = 0.2;
+      this.oneAudio.play();
+    }
+  }, {
+    key: "playGoAudio",
+    value: function playGoAudio() {
+      this.goAudio.currentTime = 0;
+      this.goAudio.volume = 0.2;
+      this.goAudio.play();
+    }
+  }, {
+    key: "playGameOverAudio",
+    value: function playGameOverAudio() {
+      this.gameOverAudio.currentTime = 0;
+      this.gameOverAudio.volume = 0.2;
+      this.gameOverAudio.play();
     }
   }, {
     key: "playMusic",
