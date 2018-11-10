@@ -9,16 +9,16 @@
 
 .tile-cntr li {
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-  color: #370b00;
+  color: #ffffff;
   font-family: inherit;
   font-size: 40px;
   line-height: 70px;
   font-weight: 700;
   list-style-type: none;
-  height: 67px;
-  width: 67px;
+  height: 66px;
+  width: 66px;
   cursor: pointer;
-  border: 2px solid;
+  border: 0.5px solid;
   border-radius: 4px;
   box-sizing: border-box;
   background: rgb(226, 226, 226); /* Old browsers */
@@ -47,7 +47,7 @@
 
 .red-count {
   cursor: default !important;
-  color: white !important;
+  color: #ffffff !important;
   background: rgb(226, 226, 226) !important; /* Old browsers */
   background: -moz-linear-gradient(
     top,
@@ -74,7 +74,7 @@
 
 .yellow-count {
   cursor: default !important;
-  color: white !important;
+  color: #ffffff !important;
   background: rgb(226, 226, 226) !important; /* Old browsers */
   background: -moz-linear-gradient(
     top,
@@ -101,7 +101,7 @@
 
 .green-count {
   cursor: default !important;
-  color: white !important;
+  color: #ffffff !important;
   background: rgb(226, 226, 226) !important; /* Old browsers */
   background: -moz-linear-gradient(
     top,

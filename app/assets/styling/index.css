@@ -27,7 +27,7 @@ body {
   width: 400px;
   border-radius: 3px;
   border-image: inherit;
-  background-color: #390b008f;
+  background-color: #1e1e1ee6;
   font-size: 50px;
   text-align: center;
   margin-top: 100px;
@@ -53,7 +53,7 @@ input[type="button"]:focus {
   width: 600px;
   border-radius: 3px;
   border-image: inherit;
-  background-color: #390b008f;
+  background-color: #1e1e1ee6;
   color: white;
   font-size: 50px;
   margin-top: 25px;
@@ -159,7 +159,7 @@ input[type="button"]:focus {
   letter-spacing: 2px;
   font-weight: 700;
   width: 75px;
-  color: #330a00;
+  color: #1a1a1a;
   background: linear-gradient(
     to bottom,
     rgba(226, 226, 226, 1) 0%,
@@ -176,7 +176,7 @@ input[type="button"]:focus {
   margin-top: 12.5px;
   height: 500px;
   width: 1000px;
-  background-color: #390b008f;
+  background-color: #1e1e1ee6;
   border: 3px solid rgb(226, 226, 226);
   border-image: inherit;
   border-radius: 3px;

@@ -129,6 +129,7 @@ var Board = function () {
     this.toggleTileSelectStatus = this.toggleTileSelectStatus.bind(this);
     this.selectTile = this.selectTile.bind(this);
     this.handleTileClick = this.handleTileClick.bind(this);
+    this.database = firebase.database();
   }
 
   _createClass(Board, [{
@@ -383,8 +384,8 @@ var Game = function () {
     this.music = new _music2.default();
     this.time = gameUtil.getTimerField();
     this.count = 3;
-    this.currentDiagnal = 1;
-    this.isLastDiagnal = false;
+    this.currentDiag = 1;
+    this.isLastDiag = false;
     this.intervalId = null;
   }
 
@@ -410,19 +411,19 @@ var Game = function () {
   }, {
     key: "countingDown",
     value: function countingDown() {
-      switch (this.isLastDiagnal) {
+      switch (this.isLastDiag) {
         case false:
-          if (this.count === 3 && this.currentDiagnal === 1) this.music.playThreeAudio();else if (this.count === 2 && this.currentDiagnal === 1) this.music.playTwoAudio();else if (this.count === 1 && this.currentDiagnal === 1) this.music.playOneAudio();
+          if (this.count === 3 && this.currentDiag === 1) this.music.playThreeAudio();else if (this.count === 2 && this.currentDiag === 1) this.music.playTwoAudio();else if (this.count === 1 && this.currentDiag === 1) this.music.playOneAudio();
 
-          gameUtil.flashStartSequence(this.currentDiagnal, this.count);
-          this.currentDiagnal++;
-          if (this.currentDiagnal === 7) this.isLastDiagnal = true;
+          gameUtil.flashStartSequence(this.currentDiag, this.count);
+          this.currentDiag++;
+          if (this.currentDiag === 7) this.isLastDiag = true;
           break;
 
         case true:
-          gameUtil.flashStartSequence(this.currentDiagnal, this.count);
-          this.currentDiagnal = 1;
-          this.isLastDiagnal = this.count === 1 ? "Will Hit Default" : false;
+          gameUtil.flashStartSequence(this.currentDiag, this.count);
+          this.currentDiag = 1;
+          this.isLastDiag = this.count === 1 ? "Will Hit Default" : false;
           this.count--;
           break;
 
@@ -456,8 +457,8 @@ var Game = function () {
     key: "resetGame",
     value: function resetGame() {
       this.count = 3;
-      this.currentDiagnal = 1;
-      this.isLastDiagnal = false;
+      this.currentDiag = 1;
+      this.isLastDiag = false;
       this.board.deActivateTiles(true);
       this.music.stopMusic();
       this.resetTimer();
@@ -868,7 +869,7 @@ var findMatch = function findMatch(el, valueList) {
   return 7;
 };
 
-var getCountDownEls = exports.getCountDownEls = function getCountDownEls(diagnalList) {
+var getCountDownEls = exports.getCountDownEls = function getCountDownEls(diagList) {
   var allTileEls = document.querySelectorAll("#tiles li");
 
   var countDownEls = {};
@@ -881,7 +882,7 @@ var getCountDownEls = exports.getCountDownEls = function getCountDownEls(diagnal
     for (var _iterator = allTileEls[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
       var el = _step.value;
 
-      var match = findMatch(el, diagnalList);
+      var match = findMatch(el, diagList);
 
       countDownEls[match] ? countDownEls[match].push(el) : countDownEls[match] = [el];
     }
@@ -903,59 +904,59 @@ var getCountDownEls = exports.getCountDownEls = function getCountDownEls(diagnal
   return countDownEls;
 };
 
-var flashStartSequence = exports.flashStartSequence = function flashStartSequence(currentDiagnal, count) {
+var flashStartSequence = exports.flashStartSequence = function flashStartSequence(currentDiag, count) {
   switch (count) {
     case 3:
-      flash3(currentDiagnal);
+      flash3(currentDiag);
       break;
     case 2:
-      flash2(currentDiagnal);
+      flash2(currentDiag);
       break;
     case 1:
-      flash1(currentDiagnal);
+      flash1(currentDiag);
   }
 };
 
-var flash3 = exports.flash3 = function flash3(currentDiagnal) {
-  cleanUpLastSequence(currentDiagnal);
-  flashSequence(currentDiagnal, "3", "red-count");
+var flash3 = exports.flash3 = function flash3(currentDiag) {
+  cleanUpLastSequence(currentDiag);
+  flashSequence(currentDiag, "3", "red-count");
 };
 
-var flash2 = exports.flash2 = function flash2(currentDiagnal) {
-  cleanUpLastSequence(currentDiagnal, rightList);
-  flashSequence(currentDiagnal, "2", "yellow-count");
+var flash2 = exports.flash2 = function flash2(currentDiag) {
+  cleanUpLastSequence(currentDiag, rightList);
+  flashSequence(currentDiag, "2", "yellow-count");
 };
 
-var flash1 = exports.flash1 = function flash1(currentDiagnal) {
-  cleanUpLastSequence(currentDiagnal);
-  flashSequence(currentDiagnal, "1", "green-count");
+var flash1 = exports.flash1 = function flash1(currentDiag) {
+  cleanUpLastSequence(currentDiag);
+  flashSequence(currentDiag, "1", "green-count");
 };
 
 var countDownEls = void 0,
     cleanUpLast = void 0;
-var cleanUpLastSequence = exports.cleanUpLastSequence = function cleanUpLastSequence(currentDiagnal) {
-  var diagnalList = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : leftList;
+var cleanUpLastSequence = exports.cleanUpLastSequence = function cleanUpLastSequence(currentDiag) {
+  var diagList = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : leftList;
 
-  if (currentDiagnal === 1 && cleanUpLast) {
+  if (currentDiag === 1 && cleanUpLast) {
     cleanUpLast.innerHTML = "?";
     cleanUpLast.className = "inactive";
   }
 
-  countDownEls = getCountDownEls(diagnalList);
+  countDownEls = getCountDownEls(diagList);
   cleanUpLast = countDownEls[7][0];
 
-  if (currentDiagnal !== 1) {
+  if (currentDiag !== 1) {
     var cleanUpCount = { 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 7: 6 };
-    var diagnalToCleanUp = cleanUpCount[currentDiagnal];
+    var diagToCleanUp = cleanUpCount[currentDiag];
 
-    countDownEls[diagnalToCleanUp].forEach(function (el) {
-      flashSequence(diagnalToCleanUp, "?", "inactive");
+    countDownEls[diagToCleanUp].forEach(function (el) {
+      flashSequence(diagToCleanUp, "?", "inactive");
     });
   }
 };
 
-var flashSequence = function flashSequence(currentDiagnal, text, className) {
-  countDownEls[currentDiagnal].forEach(function (el) {
+var flashSequence = function flashSequence(currentDiag, text, className) {
+  countDownEls[currentDiag].forEach(function (el) {
     el.innerHTML = text;
     el.className = className;
   });

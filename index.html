@@ -3,6 +3,22 @@
   <head>
     <meta charset="UTF-8">
     
+    
+    <script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyB_mwuEe9ngeU4B3pvJp1iynxoIPoP92PI",
+        authDomain: "flabbergast-369.firebaseapp.com",
+        databaseURL: "https://flabbergast-369.firebaseio.com",
+        projectId: "flabbergast-369",
+        storageBucket: "flabbergast-369.appspot.com",
+        messagingSenderId: "366122328271"
+      };
+      firebase.initializeApp(config);
+    </script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/5.5.8/firebase-database.js"></script> -->
+    
     <audio id="backgroundAudio">
       <source src="./app/assets/music/FlabbergastBackgroundAudio.mp3" type="audio/mpeg" />
       <source src="./app/assets/music/FlabbergastBackgroundAudio.ogg" type="audio/mpeg" />
@@ -82,7 +98,7 @@
             in the time allotted
           </li>
           <li class="instruction-text">
-            • Horizontal, Vertical, and Diagnal
+            • Horizontal, Vertical, and Diag
           </li> 
           <li class="instruction-text-indented">
             movements are all legal
@@ -121,6 +137,7 @@
       </div>
       
       <div class="middle-game-cntr">
+        <!-- <input class="high-score-field" /> -->
         <div class="current-word-cntr">
           <h2 id="current-word-text"></h2>
         </div>
