@@ -330,19 +330,28 @@ var Board = function () {
     key: "generateHighScoreList",
     value: function generateHighScoreList() {
       var model = document.getElementById("high-score-model");
-      var list = document.createElement("ul");
-      var listContent = document.createTextNode("High Scores");
-      list.appendChild(listContent);
+      var list = document.createElement("div");
+      var highScoreHeading = document.createElement("h1");
+      var highScoreContent = document.createTextNode("Leader Board");
+
+      highScoreHeading.appendChild(highScoreContent);
+      list.appendChild(highScoreHeading);
       model.appendChild(list);
 
-      var listItem = void 0,
-          liContent = void 0;
+      var unorderedList = void 0,
+          listItem = void 0,
+          liNameContent = void 0,
+          liScoreContent = void 0;
       for (var i = 1; i < 6; i++) {
+        unorderedList = document.createElement("ul");
         listItem = document.createElement("li");
-        liContent = document.createTextNode(i + ": Bobby Test");
-        listItem.appendChild(liContent);
+        liNameContent = document.createTextNode(i + ": Bobby Test");
+        liScoreContent = document.createTextNode("Score: 125 Points");
+        listItem.appendChild(liNameContent);
+        listItem.appendChild(liScoreContent);
+        unorderedList.appendChild(listItem);
 
-        list.appendChild(listItem);
+        list.appendChild(unorderedList);
       }
     }
   }]);
