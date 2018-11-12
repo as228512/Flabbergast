@@ -1,0 +1,23 @@
+.high-score-model {
+  position: absolute;
+  background-color: grey;
+  background-image: url("./static_images/background.jpg");
+  border: 3px solid rgb(226, 226, 226);
+  */-moz-border-image: -moz-linear-gradient(#6e6161, rgba(254, 254, 254, 1)) 1
+    1%;
+  -o-border-image: -o-linear-gradient(#6e6161, rgba(254, 254, 254, 1)) 1 1%;
+  border-image: linear-gradient(to bottom, #6e6161, rgba(254, 254, 254, 1)) 1 1%;
+}
+
+.high-score-model ul {
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background: -webkit-linear-gradient(#6e6161, rgba(254, 254, 254, 1));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 24px;
+  font-weight: 400;
+  font-family: inherit;
+}

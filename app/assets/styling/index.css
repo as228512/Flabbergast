@@ -5,8 +5,6 @@ html {
 }
 
 body {
-  background-position-y: -232px;
-  background-position-x: -54px;
   background-image: url("./static_images/background.jpg");
   background-repeat: no-repeat;
   align-items: center;
@@ -138,9 +136,11 @@ input[type="button"]:focus {
 
 .word-list {
   max-height: 89%;
-  margin-left: 10px;
+  margin-left: 27px;
   margin-top: 15px;
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   flex-wrap: wrap;
   overflow-y: scroll;
 }
@@ -196,7 +196,7 @@ input[type="button"]:focus {
 
 .instructions,
 .word-list-cntr {
-  margin-top: 24px;
+  align-self: center;
   height: 90%;
   width: 300px;
   border: 2px solid rgb(226, 226, 226);

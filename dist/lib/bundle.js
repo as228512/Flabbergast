@@ -123,6 +123,7 @@ var Board = function () {
   function Board() {
     _classCallCheck(this, Board);
 
+    this.generateHighScoreList();
     this.tileSet = [];
     this.word = null;
     this.music = new _music2.default();
@@ -320,10 +321,29 @@ var Board = function () {
     value: function appendWord(word) {
       var foundWordsTail = document.getElementById("tail");
       var newChild = document.createElement("li");
-      var nodeText = document.createTextNode("" + word);
+      var nodeText = document.createTextNode("\u2022 " + word);
 
       newChild.appendChild(nodeText);
       boardUtil.getFoundWordList().insertBefore(newChild, foundWordsTail);
+    }
+  }, {
+    key: "generateHighScoreList",
+    value: function generateHighScoreList() {
+      var model = document.getElementById("high-score-model");
+      var list = document.createElement("ul");
+      var listContent = document.createTextNode("High Scores");
+      list.appendChild(listContent);
+      model.appendChild(list);
+
+      var listItem = void 0,
+          liContent = void 0;
+      for (var i = 1; i < 6; i++) {
+        listItem = document.createElement("li");
+        liContent = document.createTextNode(i + ": Bobby Test");
+        listItem.appendChild(liContent);
+
+        list.appendChild(listItem);
+      }
     }
   }]);
 

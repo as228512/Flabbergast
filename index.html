@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     
     
-    <script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script> -->
+    <script src="https://www.gstatic.com/firebasejs/5.5.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.8/firebase-database.js"></script>
     <script>
       // Initialize Firebase
       var config = {
@@ -56,7 +58,8 @@
     <link rel="stylesheet" href="./app/assets/styling/reset.css" />
     <link rel="stylesheet" href="./app/assets/styling/index.css" />
     <link rel="stylesheet" href="./app/assets/styling/tile.css" />
-    <link rel="stylesheet" href="./app/assets/styling/current_word.css"/>
+    <link rel="stylesheet" href="./app/assets/styling/current_word.css" />
+    <link rel="stylesheet" href="./app/assets/styling/model.css" />
     <link rel="icon" 
       type="image/png" 
       href="./app/assets/styling/static_images/icons8-brain-32.png">
@@ -65,6 +68,10 @@
   </head>
 
   <body>
+    
+    <div class="high-score-model" id="high-score-model">
+      
+    </div>
 
     <div class="logo-ctr">
       <h1 class="logo-text">Flabbergast</h1>
@@ -98,7 +105,7 @@
             in the time allotted
           </li>
           <li class="instruction-text">
-            • Horizontal, Vertical, and Diag
+            • Horizontal, Vertical, and Diagonal
           </li> 
           <li class="instruction-text-indented">
             movements are all legal
