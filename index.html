@@ -67,11 +67,7 @@
     <script src="./dist/lib/bundle.js"></script>
   </head>
 
-  <body>
-    
-    <div class="high-score-model" id="high-score-model">
-      
-    </div>
+  <body id="body">
 
     <div class="logo-ctr">
       <h1 class="logo-text">Flabbergast</h1>
@@ -144,10 +140,11 @@
       </div>
       
       <div class="middle-game-cntr">
-        <!-- <input class="high-score-field" /> -->
+        
         <div class="current-word-cntr">
           <h2 id="current-word-text"></h2>
         </div>
+        
         <div id="tiles" class="tile-cntr">
           <li id="t0" class="inactive" value="1">?</li>
           <li id="t1" class="inactive" value="2">?</li>
@@ -166,6 +163,7 @@
           <li id="t14" class="inactive" value="15">?</li>
           <li id="t15" class="inactive" value="16">?</li>
         </div>
+        
       </div>
       
       <div id="word-list-cntr" class="word-list-cntr">
@@ -179,8 +177,10 @@
   </body>
 
   <footer>
-    <li></li>
-    <li></li>
-    <li></li>
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
   </footer>
 </html>

@@ -327,6 +327,38 @@ var Board = function () {
       boardUtil.getFoundWordList().insertBefore(newChild, foundWordsTail);
     }
   }, {
+    key: "toggleModelBackground",
+    value: function toggleModelBackground() {
+      var body = document.getElementById("body");
+      var modelBackground = document.getElementById("model-background");
+
+      if (modelBackground) {
+        body.removeChild(modelBackground);
+      } else {
+        modelBackground = document.createElement("div");
+        modelBackground.id = "model-background";
+        body.appendChild(modelBackground);
+      }
+    }
+  }, {
+    key: "toggleHighScoreModel",
+    value: function toggleHighScoreModel() {
+      var body = document.getElementById("body");
+      var model = document.getElementById("high-score-model");
+
+      if (model) {
+        body.removeChild(model);
+        this.toggleModelBackground();
+      } else {
+        model = document.createElement("div");
+        model.id = "high-score-model";
+        body.appendChild(model);
+
+        this.toggleModelBackground();
+        this.generateHighScoreList();
+      }
+    }
+  }, {
     key: "generateHighScoreList",
     value: function generateHighScoreList() {
       var model = document.getElementById("high-score-model");
@@ -339,17 +371,21 @@ var Board = function () {
       model.appendChild(list);
 
       var unorderedList = void 0,
-          listItem = void 0,
+          nameListItem = void 0,
+          scoreListItem = void 0,
           liNameContent = void 0,
           liScoreContent = void 0;
       for (var i = 1; i < 6; i++) {
         unorderedList = document.createElement("ul");
-        listItem = document.createElement("li");
+        nameListItem = document.createElement("li");
+        scoreListItem = document.createElement("li");
         liNameContent = document.createTextNode(i + ": Bobby Test");
-        liScoreContent = document.createTextNode("Score: 125 Points");
-        listItem.appendChild(liNameContent);
-        listItem.appendChild(liScoreContent);
-        unorderedList.appendChild(listItem);
+        liScoreContent = document.createTextNode("125 Points");
+
+        nameListItem.appendChild(liNameContent);
+        scoreListItem.appendChild(liScoreContent);
+        unorderedList.appendChild(nameListItem);
+        unorderedList.appendChild(scoreListItem);
 
         list.appendChild(unorderedList);
       }
