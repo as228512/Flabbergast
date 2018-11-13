@@ -1,7 +1,7 @@
 .tile-cntr {
   display: flex;
   flex-wrap: wrap;
-  height: 302px;
+  height: 300px;
   width: 300px;
   justify-content: space-between;
   border-image: inherit;
@@ -18,7 +18,7 @@
   height: 66px;
   width: 66px;
   cursor: pointer;
-  border: 0.5px solid;
+  border: 2px solid;
   border-radius: 4px;
   box-sizing: border-box;
   background: rgb(226, 226, 226); /* Old browsers */

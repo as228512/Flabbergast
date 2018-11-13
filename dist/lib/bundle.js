@@ -123,14 +123,14 @@ var Board = function () {
   function Board() {
     _classCallCheck(this, Board);
 
-    this.generateHighScoreList();
+    this.toggleHighScoreModel();
     this.tileSet = [];
     this.word = null;
     this.music = new _music2.default();
+    this.database = firebase.database();
     this.toggleTileSelectStatus = this.toggleTileSelectStatus.bind(this);
     this.selectTile = this.selectTile.bind(this);
     this.handleTileClick = this.handleTileClick.bind(this);
-    this.database = firebase.database();
   }
 
   _createClass(Board, [{
@@ -327,20 +327,6 @@ var Board = function () {
       boardUtil.getFoundWordList().insertBefore(newChild, foundWordsTail);
     }
   }, {
-    key: "toggleModelBackground",
-    value: function toggleModelBackground() {
-      var body = document.getElementById("body");
-      var modelBackground = document.getElementById("model-background");
-
-      if (modelBackground) {
-        body.removeChild(modelBackground);
-      } else {
-        modelBackground = document.createElement("div");
-        modelBackground.id = "model-background";
-        body.appendChild(modelBackground);
-      }
-    }
-  }, {
     key: "toggleHighScoreModel",
     value: function toggleHighScoreModel() {
       var body = document.getElementById("body");
@@ -356,6 +342,24 @@ var Board = function () {
 
         this.toggleModelBackground();
         this.generateHighScoreList();
+      }
+    }
+  }, {
+    key: "toggleModelBackground",
+    value: function toggleModelBackground() {
+      var body = document.getElementById("body");
+      var modelBackground = document.getElementById("model-background");
+
+      if (modelBackground) {
+        modelBackground.removeEventListener("click", this.toggleHighScoreModel.bind(this));
+
+        body.removeChild(modelBackground);
+      } else {
+        modelBackground = document.createElement("div");
+        modelBackground.id = "model-background";
+        body.appendChild(modelBackground);
+
+        modelBackground.addEventListener("click", this.toggleHighScoreModel.bind(this));
       }
     }
   }, {
