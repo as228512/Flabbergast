@@ -123,11 +123,11 @@ var Board = function () {
   function Board() {
     _classCallCheck(this, Board);
 
-    this.toggleHighScoreModel();
     this.tileSet = [];
     this.word = null;
     this.music = new _music2.default();
     this.database = firebase.database();
+    this.toggleHighScoreModel();
     this.toggleTileSelectStatus = this.toggleTileSelectStatus.bind(this);
     this.selectTile = this.selectTile.bind(this);
     this.handleTileClick = this.handleTileClick.bind(this);
@@ -329,6 +329,7 @@ var Board = function () {
   }, {
     key: "toggleHighScoreModel",
     value: function toggleHighScoreModel() {
+      this.retreiveHighScores();
       var body = document.getElementById("body");
       var model = document.getElementById("high-score-model");
 
@@ -341,12 +342,12 @@ var Board = function () {
         body.appendChild(model);
 
         this.toggleModelBackground();
-        this.generateHighScoreList();
       }
     }
   }, {
     key: "toggleModelBackground",
     value: function toggleModelBackground() {
+      debugger;
       var body = document.getElementById("body");
       var modelBackground = document.getElementById("model-background");
 
@@ -363,8 +364,19 @@ var Board = function () {
       }
     }
   }, {
+    key: "retreiveHighScores",
+    value: function retreiveHighScores() {
+      var _this5 = this;
+
+      debugger;
+      this.database.ref("/highScores").once("value").then(function (snapshot) {
+        _this5.generateHighScoreList(snapshot.val().slice(1, 6));
+      });
+    }
+  }, {
     key: "generateHighScoreList",
-    value: function generateHighScoreList() {
+    value: function generateHighScoreList(highScores) {
+      var scores = highScores;
       var model = document.getElementById("high-score-model");
       var list = document.createElement("div");
       var highScoreHeading = document.createElement("h1");
@@ -377,17 +389,17 @@ var Board = function () {
       var unorderedList = void 0,
           nameListItem = void 0,
           scoreListItem = void 0,
-          liNameContent = void 0,
-          liScoreContent = void 0;
-      for (var i = 1; i < 6; i++) {
+          liNameText = void 0,
+          liScoreText = void 0;
+      for (var i = 0; i < 5; i++) {
         unorderedList = document.createElement("ul");
         nameListItem = document.createElement("li");
         scoreListItem = document.createElement("li");
-        liNameContent = document.createTextNode(i + ": Bobby Test");
-        liScoreContent = document.createTextNode("125 Points");
+        liNameText = document.createTextNode("" + scores[i].name);
+        liScoreText = document.createTextNode(scores[i].score + " Points");
 
-        nameListItem.appendChild(liNameContent);
-        scoreListItem.appendChild(liScoreContent);
+        nameListItem.appendChild(liNameText);
+        scoreListItem.appendChild(liScoreText);
         unorderedList.appendChild(nameListItem);
         unorderedList.appendChild(scoreListItem);
 
