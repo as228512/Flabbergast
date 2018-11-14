@@ -127,6 +127,7 @@ var Board = function () {
     this.word = null;
     this.music = new _music2.default();
     this.database = firebase.database();
+    // this.toggleLeaderBoardModel();
     this.toggleHighScoreModel();
     this.toggleTileSelectStatus = this.toggleTileSelectStatus.bind(this);
     this.selectTile = this.selectTile.bind(this);
@@ -325,58 +326,77 @@ var Board = function () {
       boardUtil.getFoundWordList().insertBefore(newChild, foundWordsTail);
     }
   }, {
-    key: "toggleHighScoreModel",
-    value: function toggleHighScoreModel() {
+    key: "toggleLeaderBoardModel",
+    value: function toggleLeaderBoardModel() {
       var body = boardUtil.getBodyField();
-      var model = document.getElementById("high-score-model");
+      var model = boardUtil.getLeaderBoardModel();
 
       if (model) {
-        body.removeChild(model);
         this.toggleModelBackground();
+        body.removeChild(model);
       } else {
         model = document.createElement("div");
-        model.id = "high-score-model";
+        model.id = "leader-board-model";
         body.appendChild(model);
 
-        // this.generateHighScoreList();
         this.retrieveHighScores();
         this.toggleModelBackground();
       }
     }
   }, {
-    key: "toggleNewHighScoreModel",
-    value: function toggleNewHighScoreModel() {
+    key: "toggleHighScoreModel",
+    value: function toggleHighScoreModel() {
       var body = boardUtil.getBodyField();
-      var model = document.getElementById("new-high-score-model");
+      var model = boardUtil.getHighScoreModel();
 
       if (model) {
-        body.removeChild(model);
         this.toggleModelBackground();
+        body.removeChild(model);
+        this.toggleLeaderBoardModel();
       } else {
-        model = document.createLeement("div");
-        model.id = "new-high-score-model";
+        model = document.createElement("div");
+        model.id = "high-score-model";
         body.appendChild(model);
 
+        this.generateHighScoreForm();
         this.toggleModelBackground();
       }
     }
   }, {
     key: "toggleModelBackground",
     value: function toggleModelBackground() {
-      var body = document.getElementById("body");
-      var modelBackground = document.getElementById("model-background");
+      var body = boardUtil.getBodyField();
+      var highScoreModel = boardUtil.getHighScoreModel();
+      var modelBackground = boardUtil.getModelBackground();
 
       if (modelBackground) {
-        modelBackground.removeEventListener("click", this.toggleHighScoreModel.bind(this));
+        if (highScoreModel) {
+          modelBackground.removeEventListener("click", this.toggleLeaderBoardModel.bind(this));
+        } else {
+          modelBackground.removeEventListener("click", this.toggleHighScoreModel.bind(this));
+        }
 
         body.removeChild(modelBackground);
       } else {
-        modelBackground = document.createElement("div");
-        modelBackground.id = "model-background";
-        body.appendChild(modelBackground);
+        modelBackground = this.appendModelBackground();
 
-        modelBackground.addEventListener("click", this.toggleHighScoreModel.bind(this));
+        if (highScoreModel) {
+          modelBackground.addEventListener("click", this.toggleHighScoreModel.bind(this));
+        } else {
+          modelBackground.addEventListener("click", this.toggleLeaderBoardModel.bind(this));
+        }
       }
+    }
+  }, {
+    key: "appendModelBackground",
+    value: function appendModelBackground() {
+      var body = boardUtil.getBodyField();
+
+      var modelBackground = document.createElement("div");
+      modelBackground.id = "model-background";
+      body.appendChild(modelBackground);
+
+      return modelBackground;
     }
   }, {
     key: "retrieveHighScores",
@@ -385,7 +405,7 @@ var Board = function () {
 
       this.database.ref("/highScores/").once("value").then(function (snapshot) {
         var sortedHighScores = _this5.sortHighScores(snapshot.val().slice(1, 6));
-        _this5.generateHighScoreList(sortedHighScores);
+        _this5.generateLeaderBoard(sortedHighScores);
       });
     }
   }, {
@@ -416,17 +436,41 @@ var Board = function () {
       });
     }
   }, {
-    key: "generateHighScoreList",
-    value: function generateHighScoreList(sortedHighScores) {
-      var scores = sortedHighScores;
-      var model = document.getElementById("high-score-model");
-      var list = document.createElement("div");
-      var highScoreHeading = document.createElement("h1");
-      var highScoreContent = document.createTextNode("Leader Board");
+    key: "generateHighScoreForm",
+    value: function generateHighScoreForm() {
+      var model = boardUtil.getHighScoreModel();
+      var form = document.createElement("form");
+      var h1 = document.createElement("h1");
+      var h1Text = document.createTextNode("Congratulations");
+      var ul = document.createElement("ul");
+      var liMessage = document.createElement("li");
+      var liMessageText = document.createTextNode("You've made the leader board !");
+      var nameInput = document.createElement("input");
+      var submitInput = document.createElement("input");
+      nameInput.value = "Name...";
+      submitInput.type = "submit";
 
-      highScoreHeading.appendChild(highScoreContent);
-      list.appendChild(highScoreHeading);
-      model.appendChild(list);
+      model.appendChild(form);
+      form.appendChild(h1);
+      h1.appendChild(h1Text);
+      form.appendChild(ul);
+      ul.appendChild(liMessage);
+      liMessage.appendChild(liMessageText);
+      form.appendChild(nameInput);
+      form.appendChild(submitInput);
+    }
+  }, {
+    key: "generateLeaderBoard",
+    value: function generateLeaderBoard(sortedHighScores) {
+      var scores = sortedHighScores;
+      var model = boardUtil.getLeaderBoardModel();
+      // const list = document.createElement("div");
+      var highScoreHeading = document.createElement("h1");
+      var highScoreHeadingText = document.createTextNode("Leader Board");
+
+      highScoreHeading.appendChild(highScoreHeadingText);
+      model.appendChild(highScoreHeading);
+      // model.appendChild(list);
 
       var unorderedList = void 0,
           nameListItem = void 0,
@@ -445,7 +489,7 @@ var Board = function () {
         unorderedList.appendChild(nameListItem);
         unorderedList.appendChild(scoreListItem);
 
-        list.appendChild(unorderedList);
+        model.appendChild(unorderedList);
       }
     }
   }]);
@@ -888,6 +932,18 @@ var getPointsField = exports.getPointsField = function getPointsField() {
 
 var getScore = exports.getScore = function getScore() {
   return Number(getPointsField().innerHTML.replace(/[^\d]/g, ""));
+};
+
+var getLeaderBoardModel = exports.getLeaderBoardModel = function getLeaderBoardModel() {
+  return document.getElementById("leader-board-model");
+};
+
+var getHighScoreModel = exports.getHighScoreModel = function getHighScoreModel() {
+  return document.getElementById("high-score-model");
+};
+
+var getModelBackground = exports.getModelBackground = function getModelBackground() {
+  return document.getElementById("model-background");
 };
 
 var getFoundWordList = exports.getFoundWordList = function getFoundWordList() {
