@@ -9,6 +9,7 @@
   z-index: 1;
   width: 24%;
   position: absolute;
+  overflow: scroll;
   background-image: url("./static_images/background.jpg");
   border: 3px solid rgb(226, 226, 226);
   -moz-border-image: -moz-linear-gradient(#6e6161, rgba(254, 254, 254, 1)) 1 1%;
@@ -19,7 +20,7 @@
 #high-score-model ul {
   height: 100%;
   justify-content: space-between;
-  padding: 16px 18% 4px 18%;
+  padding: 16px 16% 4px 16%;
   align-items: flex-start;
   box-sizing: border-box;
   display: flex;
@@ -51,4 +52,9 @@
   margin-top: 15px;
   margin-left: 7%;
   width: 37%;
+}
+
+#high-score-model li {
+  margin-left: 4px;
+  margin-right: 4px;
 }
