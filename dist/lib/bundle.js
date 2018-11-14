@@ -306,13 +306,11 @@ var Board = function () {
   }, {
     key: "awardPoints",
     value: function awardPoints(word) {
-      var pointsField = boardUtil.getPointsField();
-
       var pointsAwarded = word.length < 8 ? boardUtil.scoreTable[word.length] : boardUtil.scoreTable["longer"];
 
-      var score = Number(pointsField.innerHTML.replace(/[^\d]/g, ""));
+      var score = getScore();
 
-      pointsField.innerHTML = "Score: " + (score += pointsAwarded);
+      boardUtil.getPointsField().innerHTML = "Score: " + (score += pointsAwarded);
 
       this.appendWord(word);
     }
@@ -329,8 +327,7 @@ var Board = function () {
   }, {
     key: "toggleHighScoreModel",
     value: function toggleHighScoreModel() {
-      this.retreiveHighScores();
-      var body = document.getElementById("body");
+      var body = boardUtil.getBodyField();
       var model = document.getElementById("high-score-model");
 
       if (model) {
@@ -341,13 +338,31 @@ var Board = function () {
         model.id = "high-score-model";
         body.appendChild(model);
 
+        // this.generateHighScoreList();
+        this.retrieveHighScores();
+        this.toggleModelBackground();
+      }
+    }
+  }, {
+    key: "toggleNewHighScoreModel",
+    value: function toggleNewHighScoreModel() {
+      var body = boardUtil.getBodyField();
+      var model = document.getElementById("new-high-score-model");
+
+      if (model) {
+        body.removeChild(model);
+        this.toggleModelBackground();
+      } else {
+        model = document.createLeement("div");
+        model.id = "new-high-score-model";
+        body.appendChild(model);
+
         this.toggleModelBackground();
       }
     }
   }, {
     key: "toggleModelBackground",
     value: function toggleModelBackground() {
-      debugger;
       var body = document.getElementById("body");
       var modelBackground = document.getElementById("model-background");
 
@@ -364,19 +379,46 @@ var Board = function () {
       }
     }
   }, {
-    key: "retreiveHighScores",
-    value: function retreiveHighScores() {
+    key: "retrieveHighScores",
+    value: function retrieveHighScores() {
       var _this5 = this;
 
-      debugger;
-      this.database.ref("/highScores").once("value").then(function (snapshot) {
-        _this5.generateHighScoreList(snapshot.val().slice(1, 6));
+      this.database.ref("/highScores/").once("value").then(function (snapshot) {
+        var sortedHighScores = _this5.sortHighScores(snapshot.val().slice(1, 6));
+        _this5.generateHighScoreList(sortedHighScores);
+      });
+    }
+  }, {
+    key: "sortHighScores",
+    value: function sortHighScores(highScores) {
+      return highScores.sort(function (a, b) {
+        return b.score - a.score;
+      });
+    }
+
+    // isHighScore() {
+    //   let highScores = this.retrieveHighScores();
+    //   const playerScore = boardUtil.getScore();
+    //
+    //   for (let i = 0; i < highScores.length; i++) {
+    //     if (Number(highScores[i].score) < playerScore) {
+    //       // this.setNewHighScore();
+    //     }
+    //   }
+    // }
+
+  }, {
+    key: "setNewHighScore",
+    value: function setNewHighScore(name, rank, score) {
+      this.database.ref("highScores/" + rank).set({
+        name: name,
+        score: score
       });
     }
   }, {
     key: "generateHighScoreList",
-    value: function generateHighScoreList(highScores) {
-      var scores = highScores;
+    value: function generateHighScoreList(sortedHighScores) {
+      var scores = sortedHighScores;
       var model = document.getElementById("high-score-model");
       var list = document.createElement("div");
       var highScoreHeading = document.createElement("h1");
@@ -824,6 +866,10 @@ exports.default = Tile;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var getBodyField = exports.getBodyField = function getBodyField() {
+  return document.getElementById("body");
+};
+
 var getStartButton = exports.getStartButton = function getStartButton() {
   return document.getElementById("start-button");
 };
@@ -838,6 +884,10 @@ var isWordFieldEmpty = exports.isWordFieldEmpty = function isWordFieldEmpty() {
 
 var getPointsField = exports.getPointsField = function getPointsField() {
   return document.getElementsByClassName("score")[0];
+};
+
+var getScore = exports.getScore = function getScore() {
+  return Number(getPointsField().innerHTML.replace(/[^\d]/g, ""));
 };
 
 var getFoundWordList = exports.getFoundWordList = function getFoundWordList() {
