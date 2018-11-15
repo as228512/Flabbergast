@@ -539,28 +539,17 @@ var Game = function () {
 
         var submitButton = gameUtil.getSubmitButton();
         var nameField = gameUtil.getNameField();
-        var isValidName = function isValidName() {
-          var name = nameField.value;
-
-          if (name === "") return false;
-          if (name === "Name...") return false;
-          if (name === "Enter name here...") return false;
-          return true;
-        };
-        debugger;
 
         nameField.onclick = function () {
-          if (!isValidName()) nameField.value = "";
+          if (!gameUtil.isValidName(nameField.value)) nameField.value = "";
           nameField.id = "name-field";
         };
 
         submitButton.onclick = function (e) {
-          if (!isValidName()) {
+          if (!gameUtil.isValidName(nameField.value)) {
             e.preventDefault();
-            debugger;
             nameField.value = "Enter name here...";
             nameField.id = "name-field-error";
-            debugger;
           } else _this2.handleSubmitClick(e);
         };
       }
@@ -569,7 +558,6 @@ var Game = function () {
     key: "handleSubmitClick",
     value: function handleSubmitClick(e) {
       e.preventDefault();
-      debugger;
     }
   }, {
     key: "toggleModelBackground",
@@ -614,7 +602,6 @@ var Game = function () {
 
       this.database.ref("/highScores/").once("value").then(function (snapshot) {
         var sortedHighScores = _this3.sortHighScores(snapshot.val().slice(1, 6));
-        debugger;
         _this3.generateLeaderBoard(sortedHighScores);
       });
     }
@@ -1075,6 +1062,12 @@ var getHighScoreModel = exports.getHighScoreModel = function getHighScoreModel()
 
 var getModelBackground = exports.getModelBackground = function getModelBackground() {
   return document.getElementById("model-background");
+};
+
+var isValidName = exports.isValidName = function isValidName(name) {
+  if (name === "" || name === "Name..." || name === "Enter name here...") {
+    return false;
+  } else return true;
 };
 
 var leftList = {
