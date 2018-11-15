@@ -212,7 +212,7 @@ var Board = function () {
       var firstLetter = word[0];
       var isRealWord = _word_bank_util.wordBank[firstLetter].includes(word);
       var isValidLength = word.length > 2;
-      var hasNotBeenFound = !boardUtil.foundWordsToArray().includes(word);
+      var hasNotBeenFound = !boardUtil.foundWordsToArray().includes("\u2022 " + word);
 
       var isValid = isRealWord && isValidLength && hasNotBeenFound ? true : false;
 
@@ -383,8 +383,9 @@ var Game = function () {
     this.board = new _board2.default();
     this.music = new _music2.default();
     this.time = gameUtil.getTimerField();
+    this.rank = 0;
     this.database = firebase.database();
-    this.toggleHighScoreModel();
+    this.highScores = this.retrieveHighScores();
     this.count = 3;
     this.currentDiag = 1;
     this.isLastDiag = false;
@@ -454,6 +455,10 @@ var Game = function () {
       this.board.deActivateTiles(true);
       boardUtil.toggleStartButton("Start");
       tileUtil.finalSweep();
+      if (this.isHighScore()) {
+        debugger;
+        this.toggleHighScoreModel();
+      }
     }
   }, {
     key: "resetGame",
@@ -502,7 +507,7 @@ var Game = function () {
   }, {
     key: "toggleLeaderBoardModel",
     value: function toggleLeaderBoardModel() {
-      var body = boardUtil.getBodyField();
+      var body = gameUtil.getBodyField();
       var model = gameUtil.getLeaderBoardModel();
 
       if (model) {
@@ -513,7 +518,7 @@ var Game = function () {
         model.id = "leader-board-model";
         body.appendChild(model);
 
-        this.retrieveHighScores();
+        this.generateLeaderBoard(this.highScores);
         this.toggleModelBackground();
       }
     }
@@ -522,7 +527,7 @@ var Game = function () {
     value: function toggleHighScoreModel() {
       var _this2 = this;
 
-      var body = boardUtil.getBodyField();
+      var body = gameUtil.getBodyField();
       var model = gameUtil.getHighScoreModel();
 
       if (model) {
@@ -550,19 +555,14 @@ var Game = function () {
             e.preventDefault();
             nameField.value = "Enter name here...";
             nameField.id = "name-field-error";
-          } else _this2.handleSubmitClick(e);
+          } else _this2.handleSubmitClick(e, nameField.value);
         };
       }
     }
   }, {
-    key: "handleSubmitClick",
-    value: function handleSubmitClick(e) {
-      e.preventDefault();
-    }
-  }, {
     key: "toggleModelBackground",
     value: function toggleModelBackground() {
-      var body = boardUtil.getBodyField();
+      var body = gameUtil.getBodyField();
       var highScoreModel = gameUtil.getHighScoreModel();
       var modelBackground = gameUtil.getModelBackground();
 
@@ -587,7 +587,7 @@ var Game = function () {
   }, {
     key: "appendModelBackground",
     value: function appendModelBackground() {
-      var body = boardUtil.getBodyField();
+      var body = gameUtil.getBodyField();
 
       var modelBackground = document.createElement("div");
       modelBackground.id = "model-background";
@@ -601,36 +601,65 @@ var Game = function () {
       var _this3 = this;
 
       this.database.ref("/highScores/").once("value").then(function (snapshot) {
-        var sortedHighScores = _this3.sortHighScores(snapshot.val().slice(1, 6));
-        _this3.generateLeaderBoard(sortedHighScores);
+        _this3.highScores = snapshot.val().slice(1, 6);
+        _this3.sortHighScores();
       });
     }
   }, {
     key: "sortHighScores",
-    value: function sortHighScores(highScores) {
-      return highScores.sort(function (a, b) {
+    value: function sortHighScores() {
+      debugger;
+      this.highScores = this.highScores.sort(function (a, b) {
         return b.score - a.score;
       });
+      debugger;
     }
   }, {
     key: "isHighScore",
-    value: function isHighScore(sortedHighScores) {
+    value: function isHighScore() {
+      var highScores = this.highScores;
       var playerScore = boardUtil.getScore();
 
       for (var i = 0; i < highScores.length; i++) {
         if (Number(highScores[i].score) < playerScore) {
-          this.toggleHighScoreModel();
-          // this.setNewHighScore();
+          this.rank = i + 1;
+          return true;
+          debugger;
+          break;
         }
       }
+      debugger;
+
+      return false;
     }
   }, {
-    key: "setNewHighScore",
-    value: function setNewHighScore(name, rank, score) {
-      this.database.ref("highScores/" + rank).set({
-        name: name,
-        score: score
-      });
+    key: "handleSubmitClick",
+    value: function handleSubmitClick(e, name) {
+      e.preventDefault();
+      var body = gameUtil.getBodyField();
+      var model = gameUtil.getHighScoreModel();
+
+      this.setHighScore(name);
+      this.toggleModelBackground();
+      body.removeChild(model);
+      this.toggleLeaderBoardModel();
+    }
+  }, {
+    key: "setHighScore",
+    value: function setHighScore(name) {
+      var score = boardUtil.getScore();
+      this.highScores = this.highScores.slice(0, 4);
+      this.highScores.push({ name: "" + name, score: "" + score });
+      debugger;
+      this.sortHighScores();
+      debugger;
+
+      for (var i = 0; i < this.highScores.length; i++) {
+        this.database.ref("highScores/" + (i + 1)).set({
+          name: "" + this.highScores[i].name,
+          score: "" + this.highScores[i].score
+        });
+      }
     }
   }, {
     key: "generateHighScoreForm",
@@ -937,10 +966,6 @@ exports.default = Tile;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var getBodyField = exports.getBodyField = function getBodyField() {
-  return document.getElementById("body");
-};
-
 var getStartButton = exports.getStartButton = function getStartButton() {
   return document.getElementById("start-button");
 };
@@ -1034,6 +1059,10 @@ var foundWordsToArray = exports.foundWordsToArray = function foundWordsToArray()
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var getBodyField = exports.getBodyField = function getBodyField() {
+  return document.getElementById("body");
+};
+
 var getCurrentTime = exports.getCurrentTime = function getCurrentTime() {
   var time = getTimerField();
 
