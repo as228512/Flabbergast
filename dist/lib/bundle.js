@@ -383,7 +383,6 @@ var Game = function () {
     this.board = new _board2.default();
     this.music = new _music2.default();
     this.time = gameUtil.getTimerField();
-    this.rank = 0;
     this.database = firebase.database();
     this.highScores = this.retrieveHighScores();
     this.count = 3;
@@ -456,7 +455,6 @@ var Game = function () {
       boardUtil.toggleStartButton("Start");
       tileUtil.finalSweep();
       if (this.isHighScore()) {
-        debugger;
         this.toggleHighScoreModel();
       }
     }
@@ -608,11 +606,9 @@ var Game = function () {
   }, {
     key: "sortHighScores",
     value: function sortHighScores() {
-      debugger;
       this.highScores = this.highScores.sort(function (a, b) {
         return b.score - a.score;
       });
-      debugger;
     }
   }, {
     key: "isHighScore",
@@ -622,13 +618,10 @@ var Game = function () {
 
       for (var i = 0; i < highScores.length; i++) {
         if (Number(highScores[i].score) < playerScore) {
-          this.rank = i + 1;
           return true;
-          debugger;
           break;
         }
       }
-      debugger;
 
       return false;
     }
@@ -650,9 +643,7 @@ var Game = function () {
       var score = boardUtil.getScore();
       this.highScores = this.highScores.slice(0, 4);
       this.highScores.push({ name: "" + name, score: "" + score });
-      debugger;
       this.sortHighScores();
-      debugger;
 
       for (var i = 0; i < this.highScores.length; i++) {
         this.database.ref("highScores/" + (i + 1)).set({
@@ -692,13 +683,11 @@ var Game = function () {
     value: function generateLeaderBoard(sortedHighScores) {
       var scores = sortedHighScores;
       var model = gameUtil.getLeaderBoardModel();
-      // const list = document.createElement("div");
       var highScoreHeading = document.createElement("h1");
       var highScoreHeadingText = document.createTextNode("Leader Board");
 
       highScoreHeading.appendChild(highScoreHeadingText);
       model.appendChild(highScoreHeading);
-      // model.appendChild(list);
 
       var unorderedList = void 0,
           nameListItem = void 0,
