@@ -126,9 +126,9 @@ var Board = function () {
     this.tileSet = [];
     this.word = null;
     this.music = new _music2.default();
-    this.database = firebase.database();
+    // this.database = firebase.database();
     // this.toggleLeaderBoardModel();
-    this.toggleHighScoreModel();
+    // this.toggleHighScoreModel();
     this.toggleTileSelectStatus = this.toggleTileSelectStatus.bind(this);
     this.selectTile = this.selectTile.bind(this);
     this.handleTileClick = this.handleTileClick.bind(this);
@@ -309,7 +309,7 @@ var Board = function () {
     value: function awardPoints(word) {
       var pointsAwarded = word.length < 8 ? boardUtil.scoreTable[word.length] : boardUtil.scoreTable["longer"];
 
-      var score = getScore();
+      var score = boardUtil.getScore();
 
       boardUtil.getPointsField().innerHTML = "Score: " + (score += pointsAwarded);
 
@@ -324,173 +324,6 @@ var Board = function () {
 
       newChild.appendChild(nodeText);
       boardUtil.getFoundWordList().insertBefore(newChild, foundWordsTail);
-    }
-  }, {
-    key: "toggleLeaderBoardModel",
-    value: function toggleLeaderBoardModel() {
-      var body = boardUtil.getBodyField();
-      var model = boardUtil.getLeaderBoardModel();
-
-      if (model) {
-        this.toggleModelBackground();
-        body.removeChild(model);
-      } else {
-        model = document.createElement("div");
-        model.id = "leader-board-model";
-        body.appendChild(model);
-
-        this.retrieveHighScores();
-        this.toggleModelBackground();
-      }
-    }
-  }, {
-    key: "toggleHighScoreModel",
-    value: function toggleHighScoreModel() {
-      var body = boardUtil.getBodyField();
-      var model = boardUtil.getHighScoreModel();
-
-      if (model) {
-        this.toggleModelBackground();
-        body.removeChild(model);
-        this.toggleLeaderBoardModel();
-      } else {
-        model = document.createElement("div");
-        model.id = "high-score-model";
-        body.appendChild(model);
-
-        this.generateHighScoreForm();
-        this.toggleModelBackground();
-      }
-    }
-  }, {
-    key: "toggleModelBackground",
-    value: function toggleModelBackground() {
-      var body = boardUtil.getBodyField();
-      var highScoreModel = boardUtil.getHighScoreModel();
-      var modelBackground = boardUtil.getModelBackground();
-
-      if (modelBackground) {
-        if (highScoreModel) {
-          modelBackground.removeEventListener("click", this.toggleLeaderBoardModel.bind(this));
-        } else {
-          modelBackground.removeEventListener("click", this.toggleHighScoreModel.bind(this));
-        }
-
-        body.removeChild(modelBackground);
-      } else {
-        modelBackground = this.appendModelBackground();
-
-        if (highScoreModel) {
-          modelBackground.addEventListener("click", this.toggleHighScoreModel.bind(this));
-        } else {
-          modelBackground.addEventListener("click", this.toggleLeaderBoardModel.bind(this));
-        }
-      }
-    }
-  }, {
-    key: "appendModelBackground",
-    value: function appendModelBackground() {
-      var body = boardUtil.getBodyField();
-
-      var modelBackground = document.createElement("div");
-      modelBackground.id = "model-background";
-      body.appendChild(modelBackground);
-
-      return modelBackground;
-    }
-  }, {
-    key: "retrieveHighScores",
-    value: function retrieveHighScores() {
-      var _this5 = this;
-
-      this.database.ref("/highScores/").once("value").then(function (snapshot) {
-        var sortedHighScores = _this5.sortHighScores(snapshot.val().slice(1, 6));
-        _this5.generateLeaderBoard(sortedHighScores);
-      });
-    }
-  }, {
-    key: "sortHighScores",
-    value: function sortHighScores(highScores) {
-      return highScores.sort(function (a, b) {
-        return b.score - a.score;
-      });
-    }
-
-    // isHighScore() {
-    //   let highScores = this.retrieveHighScores();
-    //   const playerScore = boardUtil.getScore();
-    //
-    //   for (let i = 0; i < highScores.length; i++) {
-    //     if (Number(highScores[i].score) < playerScore) {
-    //       // this.setNewHighScore();
-    //     }
-    //   }
-    // }
-
-  }, {
-    key: "setNewHighScore",
-    value: function setNewHighScore(name, rank, score) {
-      this.database.ref("highScores/" + rank).set({
-        name: name,
-        score: score
-      });
-    }
-  }, {
-    key: "generateHighScoreForm",
-    value: function generateHighScoreForm() {
-      var model = boardUtil.getHighScoreModel();
-      var form = document.createElement("form");
-      var h1 = document.createElement("h1");
-      var h1Text = document.createTextNode("Congratulations");
-      var ul = document.createElement("ul");
-      var liMessage = document.createElement("li");
-      var liMessageText = document.createTextNode("You've made the leader board !");
-      var nameInput = document.createElement("input");
-      var submitInput = document.createElement("input");
-      nameInput.value = "Name...";
-      submitInput.type = "submit";
-
-      model.appendChild(form);
-      form.appendChild(h1);
-      h1.appendChild(h1Text);
-      form.appendChild(ul);
-      ul.appendChild(liMessage);
-      liMessage.appendChild(liMessageText);
-      form.appendChild(nameInput);
-      form.appendChild(submitInput);
-    }
-  }, {
-    key: "generateLeaderBoard",
-    value: function generateLeaderBoard(sortedHighScores) {
-      var scores = sortedHighScores;
-      var model = boardUtil.getLeaderBoardModel();
-      // const list = document.createElement("div");
-      var highScoreHeading = document.createElement("h1");
-      var highScoreHeadingText = document.createTextNode("Leader Board");
-
-      highScoreHeading.appendChild(highScoreHeadingText);
-      model.appendChild(highScoreHeading);
-      // model.appendChild(list);
-
-      var unorderedList = void 0,
-          nameListItem = void 0,
-          scoreListItem = void 0,
-          liNameText = void 0,
-          liScoreText = void 0;
-      for (var i = 0; i < 5; i++) {
-        unorderedList = document.createElement("ul");
-        nameListItem = document.createElement("li");
-        scoreListItem = document.createElement("li");
-        liNameText = document.createTextNode("" + scores[i].name);
-        liScoreText = document.createTextNode(scores[i].score + " Points");
-
-        nameListItem.appendChild(liNameText);
-        scoreListItem.appendChild(liScoreText);
-        unorderedList.appendChild(nameListItem);
-        unorderedList.appendChild(scoreListItem);
-
-        model.appendChild(unorderedList);
-      }
     }
   }]);
 
@@ -550,6 +383,8 @@ var Game = function () {
     this.board = new _board2.default();
     this.music = new _music2.default();
     this.time = gameUtil.getTimerField();
+    this.database = firebase.database();
+    this.toggleHighScoreModel();
     this.count = 3;
     this.currentDiag = 1;
     this.isLastDiag = false;
@@ -663,6 +498,211 @@ var Game = function () {
       time--;
 
       this.time.innerHTML = "Time: " + time;
+    }
+  }, {
+    key: "toggleLeaderBoardModel",
+    value: function toggleLeaderBoardModel() {
+      var body = boardUtil.getBodyField();
+      var model = gameUtil.getLeaderBoardModel();
+
+      if (model) {
+        this.toggleModelBackground();
+        body.removeChild(model);
+      } else {
+        model = document.createElement("div");
+        model.id = "leader-board-model";
+        body.appendChild(model);
+
+        this.retrieveHighScores();
+        this.toggleModelBackground();
+      }
+    }
+  }, {
+    key: "toggleHighScoreModel",
+    value: function toggleHighScoreModel() {
+      var _this2 = this;
+
+      var body = boardUtil.getBodyField();
+      var model = gameUtil.getHighScoreModel();
+
+      if (model) {
+        this.toggleModelBackground();
+        body.removeChild(model);
+        this.toggleLeaderBoardModel();
+      } else {
+        model = document.createElement("div");
+        model.id = "high-score-model";
+        body.appendChild(model);
+
+        this.generateHighScoreForm();
+        this.toggleModelBackground();
+
+        var submitButton = gameUtil.getSubmitButton();
+        var nameField = gameUtil.getNameField();
+        var isValidName = function isValidName() {
+          var name = nameField.value;
+
+          if (name === "") return false;
+          if (name === "Name...") return false;
+          if (name === "Enter name here...") return false;
+          return true;
+        };
+        debugger;
+
+        nameField.onclick = function () {
+          if (!isValidName()) nameField.value = "";
+          nameField.id = "name-field";
+        };
+
+        submitButton.onclick = function (e) {
+          if (!isValidName()) {
+            e.preventDefault();
+            debugger;
+            nameField.value = "Enter name here...";
+            nameField.id = "name-field-error";
+            debugger;
+          } else _this2.handleSubmitClick(e);
+        };
+      }
+    }
+  }, {
+    key: "handleSubmitClick",
+    value: function handleSubmitClick(e) {
+      e.preventDefault();
+      debugger;
+    }
+  }, {
+    key: "toggleModelBackground",
+    value: function toggleModelBackground() {
+      var body = boardUtil.getBodyField();
+      var highScoreModel = gameUtil.getHighScoreModel();
+      var modelBackground = gameUtil.getModelBackground();
+
+      if (modelBackground) {
+        if (highScoreModel) {
+          modelBackground.removeEventListener("click", this.toggleLeaderBoardModel.bind(this));
+        } else {
+          modelBackground.removeEventListener("click", this.toggleHighScoreModel.bind(this));
+        }
+
+        body.removeChild(modelBackground);
+      } else {
+        modelBackground = this.appendModelBackground();
+
+        if (highScoreModel) {
+          modelBackground.addEventListener("click", this.toggleHighScoreModel.bind(this));
+        } else {
+          modelBackground.addEventListener("click", this.toggleLeaderBoardModel.bind(this));
+        }
+      }
+    }
+  }, {
+    key: "appendModelBackground",
+    value: function appendModelBackground() {
+      var body = boardUtil.getBodyField();
+
+      var modelBackground = document.createElement("div");
+      modelBackground.id = "model-background";
+      body.appendChild(modelBackground);
+
+      return modelBackground;
+    }
+  }, {
+    key: "retrieveHighScores",
+    value: function retrieveHighScores() {
+      var _this3 = this;
+
+      this.database.ref("/highScores/").once("value").then(function (snapshot) {
+        var sortedHighScores = _this3.sortHighScores(snapshot.val().slice(1, 6));
+        debugger;
+        _this3.generateLeaderBoard(sortedHighScores);
+      });
+    }
+  }, {
+    key: "sortHighScores",
+    value: function sortHighScores(highScores) {
+      return highScores.sort(function (a, b) {
+        return b.score - a.score;
+      });
+    }
+  }, {
+    key: "isHighScore",
+    value: function isHighScore(sortedHighScores) {
+      var playerScore = boardUtil.getScore();
+
+      for (var i = 0; i < highScores.length; i++) {
+        if (Number(highScores[i].score) < playerScore) {
+          this.toggleHighScoreModel();
+          // this.setNewHighScore();
+        }
+      }
+    }
+  }, {
+    key: "setNewHighScore",
+    value: function setNewHighScore(name, rank, score) {
+      this.database.ref("highScores/" + rank).set({
+        name: name,
+        score: score
+      });
+    }
+  }, {
+    key: "generateHighScoreForm",
+    value: function generateHighScoreForm() {
+      var model = gameUtil.getHighScoreModel();
+      var form = document.createElement("form");
+      var h1 = document.createElement("h1");
+      var h1Text = document.createTextNode("Congratulations");
+      var ul = document.createElement("ul");
+      var liMessage = document.createElement("li");
+      var liMessageText = document.createTextNode("You've made the leader board !");
+      var nameInput = document.createElement("input");
+      var submitInput = document.createElement("input");
+      nameInput.value = "Name...";
+      nameInput.id = "name-field";
+      submitInput.type = "submit";
+      submitInput.id = "submit-button";
+
+      model.appendChild(form);
+      form.appendChild(h1);
+      h1.appendChild(h1Text);
+      form.appendChild(ul);
+      ul.appendChild(liMessage);
+      liMessage.appendChild(liMessageText);
+      form.appendChild(nameInput);
+      form.appendChild(submitInput);
+    }
+  }, {
+    key: "generateLeaderBoard",
+    value: function generateLeaderBoard(sortedHighScores) {
+      var scores = sortedHighScores;
+      var model = gameUtil.getLeaderBoardModel();
+      // const list = document.createElement("div");
+      var highScoreHeading = document.createElement("h1");
+      var highScoreHeadingText = document.createTextNode("Leader Board");
+
+      highScoreHeading.appendChild(highScoreHeadingText);
+      model.appendChild(highScoreHeading);
+      // model.appendChild(list);
+
+      var unorderedList = void 0,
+          nameListItem = void 0,
+          scoreListItem = void 0,
+          liNameText = void 0,
+          liScoreText = void 0;
+      for (var i = 0; i < 5; i++) {
+        unorderedList = document.createElement("ul");
+        nameListItem = document.createElement("li");
+        scoreListItem = document.createElement("li");
+        liNameText = document.createTextNode("" + scores[i].name);
+        liScoreText = document.createTextNode(scores[i].score + " Points");
+
+        nameListItem.appendChild(liNameText);
+        scoreListItem.appendChild(liScoreText);
+        unorderedList.appendChild(nameListItem);
+        unorderedList.appendChild(scoreListItem);
+
+        model.appendChild(unorderedList);
+      }
     }
   }]);
 
@@ -934,18 +974,6 @@ var getScore = exports.getScore = function getScore() {
   return Number(getPointsField().innerHTML.replace(/[^\d]/g, ""));
 };
 
-var getLeaderBoardModel = exports.getLeaderBoardModel = function getLeaderBoardModel() {
-  return document.getElementById("leader-board-model");
-};
-
-var getHighScoreModel = exports.getHighScoreModel = function getHighScoreModel() {
-  return document.getElementById("high-score-model");
-};
-
-var getModelBackground = exports.getModelBackground = function getModelBackground() {
-  return document.getElementById("model-background");
-};
-
 var getFoundWordList = exports.getFoundWordList = function getFoundWordList() {
   return document.getElementById("word-list");
 };
@@ -1027,6 +1055,26 @@ var getCurrentTime = exports.getCurrentTime = function getCurrentTime() {
 
 var getTimerField = exports.getTimerField = function getTimerField() {
   return document.getElementsByClassName("timer")[0];
+};
+
+var getSubmitButton = exports.getSubmitButton = function getSubmitButton() {
+  return document.getElementById("submit-button");
+};
+
+var getNameField = exports.getNameField = function getNameField() {
+  return document.getElementById("name-field");
+};
+
+var getLeaderBoardModel = exports.getLeaderBoardModel = function getLeaderBoardModel() {
+  return document.getElementById("leader-board-model");
+};
+
+var getHighScoreModel = exports.getHighScoreModel = function getHighScoreModel() {
+  return document.getElementById("high-score-model");
+};
+
+var getModelBackground = exports.getModelBackground = function getModelBackground() {
+  return document.getElementById("model-background");
 };
 
 var leftList = {

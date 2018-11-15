@@ -39,6 +39,7 @@
 
 #high-score-model input {
   height: 25px;
+  margin-top: 22px;
   text-indent: 5px;
   background-color: #141414;
   color: #cec9c9;
@@ -49,12 +50,17 @@
   border-image: linear-gradient(to bottom, #6e6161, rgba(254, 254, 254, 1)) 1 1%;
 }
 
+#name-field-error {
+  color: #e43c3c !important;
+  border-image: linear-gradient(to bottom, #841313, rgba(234, 175, 175, 1)) 1 1% !important;
+}
+
 #high-score-model input[type="submit"] {
   font-size: 15px;
   letter-spacing: 2px;
   font-weight: 700;
-  height: 35px;
-  width: 95px;
+  height: 28px;
+  width: 80px;
   color: #141414;
   background: linear-gradient(
     to bottom,
@@ -65,7 +71,10 @@
   );
   cursor: pointer;
   border-radius: 8px;
+  margin-top: 5px;
   border-image: none;
+  border: none;
+  text-indent: 0;
 }
 
 #leader-board-model ul {
