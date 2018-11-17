@@ -126,9 +126,6 @@ var Board = function () {
     this.tileSet = [];
     this.word = null;
     this.music = new _music2.default();
-    // this.database = firebase.database();
-    // this.toggleLeaderBoardModel();
-    // this.toggleHighScoreModel();
     this.toggleTileSelectStatus = this.toggleTileSelectStatus.bind(this);
     this.selectTile = this.selectTile.bind(this);
     this.handleTileClick = this.handleTileClick.bind(this);
@@ -453,10 +450,10 @@ var Game = function () {
       this.stopTimer();
       this.board.deActivateTiles(true);
       boardUtil.toggleStartButton("Start");
-      tileUtil.finalSweep();
       if (this.isHighScore()) {
         this.toggleHighScoreModel();
       }
+      tileUtil.finalSweep();
     }
   }, {
     key: "resetGame",
@@ -1235,6 +1232,7 @@ var getFocusedTileEls = exports.getFocusedTileEls = function getFocusedTileEls()
 var finalSweep = exports.finalSweep = function finalSweep() {
   var focusedTiles = getFocusedTileEls();
 
+  debugger;
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
   var _iteratorError = undefined;
