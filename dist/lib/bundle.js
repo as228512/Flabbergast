@@ -452,8 +452,8 @@ var Game = function () {
       boardUtil.toggleStartButton("Start");
       if (this.isHighScore()) {
         this.toggleHighScoreModel();
-      }
-      tileUtil.finalSweep();
+        this.music.playCrowdApplauseAudio();
+      } else this.toggleLeaderBoardModel();
     }
   }, {
     key: "resetGame",
@@ -508,6 +508,7 @@ var Game = function () {
       if (model) {
         this.toggleModelBackground();
         body.removeChild(model);
+        tileUtil.finalSweep();
       } else {
         model = document.createElement("div");
         model.id = "leader-board-model";
@@ -768,6 +769,7 @@ var Music = function () {
     this.oneAudio = document.getElementById("oneAudio");
     this.goAudio = document.getElementById("goAudio");
     this.gameOverAudio = document.getElementById("gameOverAudio");
+    this.crowdApplauseAudio = document.getElementById("crowdApplauseAudio");
   }
 
   _createClass(Music, [{
@@ -818,6 +820,13 @@ var Music = function () {
       this.gameOverAudio.currentTime = 0;
       this.gameOverAudio.volume = 0.2;
       this.gameOverAudio.play();
+    }
+  }, {
+    key: "playCrowdApplauseAudio",
+    value: function playCrowdApplauseAudio() {
+      this.crowdApplauseAudio.currentTime = 0;
+      this.crowdApplauseAudio.volume = 0.2;
+      this.crowdApplauseAudio.play();
     }
   }, {
     key: "playMusic",
@@ -1232,7 +1241,6 @@ var getFocusedTileEls = exports.getFocusedTileEls = function getFocusedTileEls()
 var finalSweep = exports.finalSweep = function finalSweep() {
   var focusedTiles = getFocusedTileEls();
 
-  debugger;
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
   var _iteratorError = undefined;
