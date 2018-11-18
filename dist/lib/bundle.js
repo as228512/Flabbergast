@@ -393,8 +393,9 @@ var Game = function () {
     value: function setup() {
       var _this = this;
 
-      var startButton = boardUtil.getStartButton();
+      this.music.setupMuteButton();
 
+      var startButton = boardUtil.getStartButton();
       startButton.onclick = function () {
         boardUtil.toggleStartButton("Reset");
         _this.resetGame();
@@ -755,6 +756,12 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _board_util = __webpack_require__(/*! ./util/board_util */ "./lib/util/board_util.js");
+
+var boardUtil = _interopRequireWildcard(_board_util);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Music = function () {
@@ -770,75 +777,132 @@ var Music = function () {
     this.goAudio = document.getElementById("goAudio");
     this.gameOverAudio = document.getElementById("gameOverAudio");
     this.crowdApplauseAudio = document.getElementById("crowdApplauseAudio");
+    this.parent = document.querySelector(".mute-audio-hook");
+    this.audio = true;
+    this.isMuted = false;
   }
 
   _createClass(Music, [{
     key: "playSuccessAudio",
     value: function playSuccessAudio() {
-      this.successAudio.currentTime = 0;
-      this.successAudio.volume = 0.1;
-      this.successAudio.play();
+      if (!this.isMuted) {
+        this.successAudio.currentTime = 0;
+        this.successAudio.volume = 0.1;
+        this.successAudio.play();
+      }
     }
   }, {
     key: "playRejectAudio",
     value: function playRejectAudio() {
-      this.rejectAudio.currentTime = 0;
-      this.rejectAudio.volume = 0.2;
-      this.rejectAudio.play();
+      if (!this.isMuted) {
+        this.rejectAudio.currentTime = 0;
+        this.rejectAudio.volume = 0.2;
+        this.rejectAudio.play();
+      }
     }
   }, {
     key: "playThreeAudio",
     value: function playThreeAudio() {
-      this.threeAudio.currentTime = 0;
-      this.threeAudio.volume = 0.2;
-      this.threeAudio.play();
+      if (!this.isMuted) {
+        this.threeAudio.currentTime = 0;
+        this.threeAudio.volume = 0.2;
+        this.threeAudio.play();
+      }
     }
   }, {
     key: "playTwoAudio",
     value: function playTwoAudio() {
-      this.twoAudio.currentTime = 0;
-      this.twoAudio.volume = 0.2;
-      this.twoAudio.play();
+      if (!this.isMuted) {
+        this.twoAudio.currentTime = 0;
+        this.twoAudio.volume = 0.2;
+        this.twoAudio.play();
+      }
     }
   }, {
     key: "playOneAudio",
     value: function playOneAudio() {
-      this.oneAudio.currentTime = 0;
-      this.oneAudio.volume = 0.2;
-      this.oneAudio.play();
+      if (!this.isMuted) {
+        this.oneAudio.currentTime = 0;
+        this.oneAudio.volume = 0.2;
+        this.oneAudio.play();
+      }
     }
   }, {
     key: "playGoAudio",
     value: function playGoAudio() {
-      this.goAudio.currentTime = 0;
-      this.goAudio.volume = 0.2;
-      this.goAudio.play();
+      if (!this.isMuted) {
+        this.goAudio.currentTime = 0;
+        this.goAudio.volume = 0.2;
+        this.goAudio.play();
+      }
     }
   }, {
     key: "playGameOverAudio",
     value: function playGameOverAudio() {
-      this.gameOverAudio.currentTime = 0;
-      this.gameOverAudio.volume = 0.2;
-      this.gameOverAudio.play();
+      if (!this.isMuted) {
+        this.gameOverAudio.currentTime = 0;
+        this.gameOverAudio.volume = 0.2;
+        this.gameOverAudio.play();
+      }
     }
   }, {
     key: "playCrowdApplauseAudio",
     value: function playCrowdApplauseAudio() {
-      this.crowdApplauseAudio.currentTime = 0;
-      this.crowdApplauseAudio.volume = 0.2;
-      this.crowdApplauseAudio.play();
+      if (!this.isMuted) {
+        this.crowdApplauseAudio.currentTime = 0;
+        this.crowdApplauseAudio.volume = 0.2;
+        this.crowdApplauseAudio.play();
+      }
     }
   }, {
     key: "playMusic",
     value: function playMusic() {
-      this.backgroundAudio.volume = 0.4;
-      this.backgroundAudio.play();
+      if (!this.isMuted) {
+        this.backgroundAudio.volume = 0.4;
+        this.backgroundAudio.play();
+      }
+    }
+  }, {
+    key: "togglemuteMusic",
+    value: function togglemuteMusic() {
+      this.backgroundAudio.muted = true;
     }
   }, {
     key: "stopMusic",
     value: function stopMusic() {
       this.backgroundAudio.currentTime = 0;
       this.backgroundAudio.pause();
+    }
+  }, {
+    key: "setupMuteButton",
+    value: function setupMuteButton() {
+      var _this = this;
+
+      this.parent.onclick = function () {
+        return _this.toggleAudioMute();
+      };
+    }
+  }, {
+    key: "toggleAudioMute",
+    value: function toggleAudioMute() {
+      if (this.audio) {
+        this.isMuted = true;
+        this.backgroundAudio.muted = true;
+
+        var mutedAudio = document.createElement("i");
+        mutedAudio.className = "fas fa-volume-mute";
+        this.parent.replaceChild(mutedAudio, this.parent.firstElementChild);
+
+        this.audio = null;
+      } else {
+        this.isMuted = false;
+        this.backgroundAudio.muted = false;
+        this.audio = true;
+
+        var audio = document.createElement("i");
+        audio.className = "fas fa-volume-up";
+        this.parent.replaceChild(audio, this.parent.firstElementChild);
+      }
     }
   }]);
 

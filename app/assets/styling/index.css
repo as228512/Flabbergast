@@ -2,6 +2,14 @@ html {
   height: 100%;
   width: 100%;
   font-family: "Catamaran", sans-serif;
+
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                 supported by Chrome and Opera */
 }
 
 body {
@@ -132,6 +140,7 @@ input[type="button"]:focus {
 
 .score {
   min-width: 19%;
+  padding-left: 40px;
 }
 
 .word-list {
@@ -154,6 +163,18 @@ input[type="button"]:focus {
   margin-right: 10px;
 }
 
+.svg-inline--fa {
+  min-width: 1.125em;
+  color: rgb(226, 226, 226);
+  height: 0.5em;
+  cursor: pointer;
+}
+
+.start-volume-cntr,
+.mute-audio-hook {
+  display: flex;
+}
+
 #start-button {
   font-size: 15px;
   letter-spacing: 2px;
@@ -169,6 +190,14 @@ input[type="button"]:focus {
   );
   cursor: pointer;
   border-radius: 8px;
+
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                 supported by Chrome and Opera */
 }
 
 .game-ctr {

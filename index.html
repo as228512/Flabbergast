@@ -18,6 +18,7 @@
       };
       firebase.initializeApp(config);
     </script>
+    <script defer src="https://use.fontawesome.com/releases/v5.5.0/js/all.js" integrity="sha384-GqVMZRt5Gn7tB9D9q7ONtcp4gtHIUEW/yG7h98J7IpE3kpi+srfFyyB/04OV6pG0" crossorigin="anonymous"></script>
 
     
     <audio id="backgroundAudio">
@@ -58,6 +59,7 @@
     </audio>
     
     <title>Flabbergast</title>
+    
     <link rel="icon" 
       type="image/png" 
       href="./app/assets/styling/static_images/icons8-brain-32.png" />
@@ -67,6 +69,7 @@
     <link rel="stylesheet" href="./app/assets/styling/current_word.css" />
     <link rel="stylesheet" href="./app/assets/styling/model.css" />
     <link href="https://fonts.googleapis.com/css?family=Catamaran" rel="stylesheet">
+    
     <script src="./dist/lib/bundle.js"></script>
   </head>
 
@@ -79,7 +82,12 @@
     <div class="start-bar-ctr">
       <div class="timer">Time: 90</div>
       <div class="score">Score: 0</div>
-      <button id="start-button">Start</button>
+      <div class="start-volume-cntr">
+          <span class="mute-audio-hook">
+            <i class="fas fa-volume-up"></i>
+          </span>
+          <button id="start-button">Start</button>
+      </div>
     </div>
 
     <section class="game-ctr">
