@@ -794,6 +794,7 @@ var Music = function () {
   }, {
     key: "playRejectAudio",
     value: function playRejectAudio() {
+      debugger;
       if (!this.isMuted) {
         this.rejectAudio.currentTime = 0;
         this.rejectAudio.volume = 0.2;
@@ -886,7 +887,9 @@ var Music = function () {
     key: "toggleAudioMute",
     value: function toggleAudioMute() {
       if (this.audio) {
+        debugger;
         this.isMuted = true;
+        debugger;
         this.backgroundAudio.muted = true;
 
         var mutedAudio = document.createElement("i");
