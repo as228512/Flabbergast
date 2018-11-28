@@ -394,6 +394,7 @@ var Game = function () {
       var _this = this;
 
       this.music.setupMuteButton();
+      this.board.music.setupMuteButton();
 
       var startButton = boardUtil.getStartButton();
       startButton.onclick = function () {
@@ -778,7 +779,6 @@ var Music = function () {
     this.gameOverAudio = document.getElementById("gameOverAudio");
     this.crowdApplauseAudio = document.getElementById("crowdApplauseAudio");
     this.parent = document.querySelector(".mute-audio-hook");
-    this.audio = true;
     this.isMuted = false;
   }
 
@@ -794,7 +794,6 @@ var Music = function () {
   }, {
     key: "playRejectAudio",
     value: function playRejectAudio() {
-      debugger;
       if (!this.isMuted) {
         this.rejectAudio.currentTime = 0;
         this.rejectAudio.volume = 0.2;
@@ -886,21 +885,16 @@ var Music = function () {
   }, {
     key: "toggleAudioMute",
     value: function toggleAudioMute() {
-      if (this.audio) {
-        debugger;
+      if (!this.isMuted) {
         this.isMuted = true;
-        debugger;
         this.backgroundAudio.muted = true;
 
         var mutedAudio = document.createElement("i");
         mutedAudio.className = "fas fa-volume-mute";
         this.parent.replaceChild(mutedAudio, this.parent.firstElementChild);
-
-        this.audio = null;
       } else {
         this.isMuted = false;
         this.backgroundAudio.muted = false;
-        this.audio = true;
 
         var audio = document.createElement("i");
         audio.className = "fas fa-volume-up";

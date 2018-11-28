@@ -83,10 +83,6 @@
   justify-content: space-between;
 }
 
-#leader-board-model ul:last-of-type {
-  margin-bottom: 16px;
-}
-
 #high-score-model h1,
 #high-score-model li {
   background: -webkit-linear-gradient(#6e6161, rgba(254, 254, 254, 1));
@@ -109,7 +105,6 @@
   align-self: flex-start;
   font-size: 2vw;
   border-bottom: 2px solid rgb(226, 226, 226);
-  margin-bottom: 10px;
   margin-left: 7%;
 }
 
