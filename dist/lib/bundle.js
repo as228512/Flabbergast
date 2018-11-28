@@ -1052,8 +1052,6 @@ var getSelectedWordTiles = exports.getSelectedWordTiles = function getSelectedWo
   return tileSet.filter(function (tile) {
     return tile.tileEl.className === "selected";
   });
-
-  return word;
 };
 
 var scoreTable = exports.scoreTable = {
