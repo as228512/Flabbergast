@@ -867,7 +867,6 @@ var Music = function () {
     value: function toggleAudioMuteButton() {
       var isAudioMuted = this.backgroundAudio.muted;
       this.toggleAllAudio(isAudioMuted);
-      debugger;
 
       if (isAudioMuted) {
         var audio = document.createElement("i");
