@@ -394,8 +394,7 @@ var Game = function () {
       var _this = this;
 
       this.music.setupMuteButton();
-      this.board.music.setupMuteButton();
-
+      // this.board.music.setupMuteButton();
       var startButton = boardUtil.getStartButton();
       startButton.onclick = function () {
         boardUtil.toggleStartButton("Reset");
@@ -779,88 +778,69 @@ var Music = function () {
     this.gameOverAudio = document.getElementById("gameOverAudio");
     this.crowdApplauseAudio = document.getElementById("crowdApplauseAudio");
     this.parent = document.querySelector(".mute-audio-hook");
-    this.isMuted = false;
   }
 
   _createClass(Music, [{
     key: "playSuccessAudio",
     value: function playSuccessAudio() {
-      if (!this.isMuted) {
-        this.successAudio.currentTime = 0;
-        this.successAudio.volume = 0.1;
-        this.successAudio.play();
-      }
+      this.successAudio.currentTime = 0;
+      this.successAudio.volume = 0.1;
+      this.successAudio.play();
     }
   }, {
     key: "playRejectAudio",
     value: function playRejectAudio() {
-      if (!this.isMuted) {
-        this.rejectAudio.currentTime = 0;
-        this.rejectAudio.volume = 0.2;
-        this.rejectAudio.play();
-      }
+      this.rejectAudio.currentTime = 0;
+      this.rejectAudio.volume = 0.2;
+      this.rejectAudio.play();
     }
   }, {
     key: "playThreeAudio",
     value: function playThreeAudio() {
-      if (!this.isMuted) {
-        this.threeAudio.currentTime = 0;
-        this.threeAudio.volume = 0.2;
-        this.threeAudio.play();
-      }
+      this.threeAudio.currentTime = 0;
+      this.threeAudio.volume = 0.2;
+      this.threeAudio.play();
     }
   }, {
     key: "playTwoAudio",
     value: function playTwoAudio() {
-      if (!this.isMuted) {
-        this.twoAudio.currentTime = 0;
-        this.twoAudio.volume = 0.2;
-        this.twoAudio.play();
-      }
+      this.twoAudio.currentTime = 0;
+      this.twoAudio.volume = 0.2;
+      this.twoAudio.play();
     }
   }, {
     key: "playOneAudio",
     value: function playOneAudio() {
-      if (!this.isMuted) {
-        this.oneAudio.currentTime = 0;
-        this.oneAudio.volume = 0.2;
-        this.oneAudio.play();
-      }
+      this.oneAudio.currentTime = 0;
+      this.oneAudio.volume = 0.2;
+      this.oneAudio.play();
     }
   }, {
     key: "playGoAudio",
     value: function playGoAudio() {
-      if (!this.isMuted) {
-        this.goAudio.currentTime = 0;
-        this.goAudio.volume = 0.2;
-        this.goAudio.play();
-      }
+      this.goAudio.currentTime = 0;
+      this.goAudio.volume = 0.2;
+      this.goAudio.play();
     }
   }, {
     key: "playGameOverAudio",
     value: function playGameOverAudio() {
-      if (!this.isMuted) {
-        this.gameOverAudio.currentTime = 0;
-        this.gameOverAudio.volume = 0.2;
-        this.gameOverAudio.play();
-      }
+      this.gameOverAudio.currentTime = 0;
+      this.gameOverAudio.volume = 0.2;
+      this.gameOverAudio.play();
     }
   }, {
     key: "playCrowdApplauseAudio",
     value: function playCrowdApplauseAudio() {
-      if (!this.isMuted) {
-        this.crowdApplauseAudio.currentTime = 0;
-        this.crowdApplauseAudio.volume = 0.2;
-        this.crowdApplauseAudio.play();
-      }
+      this.crowdApplauseAudio.currentTime = 0;
+      this.crowdApplauseAudio.volume = 0.2;
+      this.crowdApplauseAudio.play();
     }
   }, {
     key: "playMusic",
     value: function playMusic() {
-      if (!this.isMuted) {
-        this.backgroundAudio.volume = 0.4;
-        this.backgroundAudio.play();
-      }
+      this.backgroundAudio.volume = 0.4;
+      this.backgroundAudio.play();
     }
   }, {
     key: "togglemuteMusic",
@@ -879,26 +859,49 @@ var Music = function () {
       var _this = this;
 
       this.parent.onclick = function () {
-        return _this.toggleAudioMute();
+        return _this.toggleAudioMuteButton();
       };
     }
   }, {
-    key: "toggleAudioMute",
-    value: function toggleAudioMute() {
-      if (!this.isMuted) {
-        this.isMuted = true;
-        this.backgroundAudio.muted = true;
+    key: "toggleAudioMuteButton",
+    value: function toggleAudioMuteButton() {
+      var isAudioMuted = this.backgroundAudio.muted;
+      this.toggleAllAudio(isAudioMuted);
+      debugger;
 
-        var mutedAudio = document.createElement("i");
-        mutedAudio.className = "fas fa-volume-mute";
-        this.parent.replaceChild(mutedAudio, this.parent.firstElementChild);
-      } else {
-        this.isMuted = false;
-        this.backgroundAudio.muted = false;
-
+      if (isAudioMuted) {
         var audio = document.createElement("i");
         audio.className = "fas fa-volume-up";
         this.parent.replaceChild(audio, this.parent.firstElementChild);
+      } else {
+        var mutedAudio = document.createElement("i");
+        mutedAudio.className = "fas fa-volume-mute";
+        this.parent.replaceChild(mutedAudio, this.parent.firstElementChild);
+      }
+    }
+  }, {
+    key: "toggleAllAudio",
+    value: function toggleAllAudio(isAudioMuted) {
+      if (isAudioMuted) {
+        this.backgroundAudio.muted = false;
+        this.successAudio.muted = false;
+        this.rejectAudio.muted = false;
+        this.threeAudio.muted = false;
+        this.twoAudio.muted = false;
+        this.oneAudio.muted = false;
+        this.goAudio.muted = false;
+        this.gameOverAudio.muted = false;
+        this.crowdApplauseAudio.muted = false;
+      } else {
+        this.backgroundAudio.muted = true;
+        this.successAudio.muted = true;
+        this.rejectAudio.muted = true;
+        this.threeAudio.muted = true;
+        this.twoAudio.muted = true;
+        this.oneAudio.muted = true;
+        this.goAudio.muted = true;
+        this.gameOverAudio.muted = true;
+        this.crowdApplauseAudio.muted = true;
       }
     }
   }]);
