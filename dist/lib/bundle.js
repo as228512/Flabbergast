@@ -1049,7 +1049,7 @@ var getFoundWordList = exports.getFoundWordList = function getFoundWordList() {
 };
 
 var getSelectedWordTiles = exports.getSelectedWordTiles = function getSelectedWordTiles(tileSet) {
-  return tileSet.filter(function (tile) {
+  tileSet.filter(function (tile) {
     return tile.tileEl.className === "selected";
   });
 };
