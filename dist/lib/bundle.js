@@ -151,12 +151,10 @@ var Board = function () {
 
       for (var i = 0; i < 16; i++) {
         var tile = shuffledTiles.pop();
-        debugger;
         var randomLetter = tileUtil.sample(tile);
         var tileEl = document.getElementById("t" + i);
 
         tileEl.innerHTML = randomLetter;
-        debugger;
         this.tileSet.push(new _tile2.default(tileEl));
       }
     }
