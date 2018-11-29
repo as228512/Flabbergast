@@ -37,12 +37,6 @@ In addition, this project will include:
 - [ ] Player score and word length point values
 - [ ] A production README
 
-### Wireframes
-
-This app will consist of a single screen with game board, game controls, and nav links to the Github, my LinkedIn, and my personal webpage.  Game controls will include Start, Reset.
-
-![wireframes](https://i.imgur.com/Xj5bFKV.png)
-
 ### Architecture and Technologies
 
 **NB**: one of the main things you should be researching and deciding upon while you write this proposal is what technologies you plan to use.  Identify and create a plan of attack for the major technical challenges in your project.
