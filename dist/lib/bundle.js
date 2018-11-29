@@ -146,14 +146,17 @@ var Board = function () {
   }, {
     key: "generateRandomTiles",
     value: function generateRandomTiles() {
-      var shuffledTiles = this.shuffleTiles(tileUtil.newVersionTiles);
+      //clones a new unique set of tiles from the master set for use
+      var shuffledTiles = this.shuffleTiles(tileUtil.newVersionTiles).slice();
 
       for (var i = 0; i < 16; i++) {
         var tile = shuffledTiles.pop();
+        debugger;
         var randomLetter = tileUtil.sample(tile);
         var tileEl = document.getElementById("t" + i);
 
         tileEl.innerHTML = randomLetter;
+        debugger;
         this.tileSet.push(new _tile2.default(tileEl));
       }
     }
