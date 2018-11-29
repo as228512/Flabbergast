@@ -176,4 +176,11 @@ Once a `Word` is judged for validity, it's scored, and audio/visual indicators a
 
 ![wordValidationGif](./app/assets/readme_images/wordValidationGif.gif)
 
+--------------------
 
+## Future Additions
+
+- [ ] Condense firebase logic
+- [ ] Add toggleable high score button
+- [ ] Add "Standard Hard" & "Endless" game modes
+- [ ] Add onload animation for gameboard
