@@ -2,7 +2,8 @@
 
 ### [Play Flabbergast]
 
-    
+![play](./app/assets/readme_images/flabbergastPlayDemoGif.gif)
+
 
 ### Game Information
 
@@ -57,3 +58,7 @@ In addition to the entry file, there will be two scripts involved in this projec
 `board.js`: this script will handle the logic for creating and updating the necessary `letter.js` elements and rendering them to the DOM.
 
 `tile.js`: this script will handle the logic behind the scenes.  A grid object will hold a `type` (letter) and a 2D array of `rows`.
+
+
+
+[Play Flabbergast]: playflabbergast.com
