@@ -208,34 +208,38 @@ var Board = function () {
       word = wordUtil.toUpperCase(word);
 
       var firstLetter = word[0];
-      var isRealWord = _word_bank_util.wordBank[firstLetter].includes(word);
       var isValidLength = word.length > 2;
       var hasNotBeenFound = !boardUtil.foundWordsToArray().includes("\u2022 " + word);
 
-      var isValid = isRealWord && isValidLength && hasNotBeenFound ? true : false;
+      // saves query time if word doesn't meet length/uniqueness constraints
+      var isValidWord = void 0;
+      if (isValidLength && hasNotBeenFound) {
+        isValidWord = _word_bank_util.wordBank[firstLetter].includes(word);
+      }
 
-      this.submitWord(word, isValid);
+      this.submitWord(word, isValidWord);
     }
   }, {
     key: "submitWord",
-    value: function submitWord(word, wasValid) {
+    value: function submitWord(word, wasValidWord) {
       var selectedWord = boardUtil.getSelectedWordTiles(this.tileSet);
 
-      if (wasValid) {
+      if (wasValidWord) {
+        this.music.playSuccessAudio();
+        this.awardPoints(word);
+
         selectedWord.forEach(function (tile) {
           tile.flashTileVerdict(true);
         });
-
-        this.music.playSuccessAudio();
-        this.awardPoints(word);
-        setTimeout(this.toggleTileSelectStatus, 300);
       } else {
         this.music.playRejectAudio();
+
         selectedWord.forEach(function (tile) {
           tile.flashTileVerdict(false);
         });
-        setTimeout(this.toggleTileSelectStatus, 300);
       }
+
+      setTimeout(this.toggleTileSelectStatus, 300);
     }
   }, {
     key: "toggleTileSelectStatus",
