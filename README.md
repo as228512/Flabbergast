@@ -180,7 +180,6 @@ Once a `Word` is judged for validity, it's scored, and audio/visual indicators a
 
 ## Future Additions
 
-- [ ] Condense firebase logic
-- [ ] Add toggleable high score button
-- [ ] Add "Standard Hard" & "Endless" game modes
-- [ ] Add onload animation for gameboard
+- [ ] Toggleable high score button
+- [ ] "Standard Hard" & "Endless" game modes
+- [ ] Onload animation for gameboard
