@@ -3,7 +3,7 @@
 ### [Play Flabbergast][play game]
 [play game]: http://www.playflabbergast.com
 
-![play](./app/assets/readme_images/flabbergastPlayDemoGif.gif)
+![playDemoGif](./app/assets/readme_images/flabbergastPlayDemoGif.gif)
 
 ------------------
 
@@ -27,7 +27,7 @@ Some basic rules include...
     
 ------------------
 
-### Architecture and Technologies
+### Technologies
 
 This project was built with the following technologies:
 
@@ -36,4 +36,93 @@ This project was built with the following technologies:
 - `Firebase` for high score persistence
 
 -------------------
+
+### Tile Generation
+
+Each game, dom elements are fetched and assigned random letters, which are then fed to the `Tile` constructor and pushed into the `Board` held array, or `tileSet`, for future reference and manipulation.
+
+```js
+   generateRandomTiles() {
+    const shuffledTiles = this.shuffleTiles(tileUtil.newVersionTiles);
+
+    for (let i = 0; i < 16; i++) {
+      const tile = shuffledTiles.pop();
+      const randomLetter = tileUtil.sample(tile);
+      const tileEl = document.getElementById(`t${i}`);
+
+      tileEl.innerHTML = randomLetter;
+      this.tileSet.push(new Tile(tileEl));
+    }
+  }
+```
+
+Each tile position is randomized via the modern (in-place) Fisher–Yates implementation.
+
+```js
+   shuffleTiles(tileSet) {
+    for (let i = tileSet.length - 1; i > 0; i--) {
+      let randomIdx = Math.floor(Math.random() * (i + 1));
+      let temp = tileSet[i];
+      tileSet[i] = tileSet[randomIdx];
+      tileSet[randomIdx] = temp;
+    }
+
+    return tileSet;
+  }
+```
+  
+------------------
+  
+### Tile Selection
+  
+On a user's first tile selection, the `Board` forms a new `Word` instance. `Word` houses all tiles of a user's current word, and will validate and reset on word end (last tile selection).
+
+Tile selection is validated using sum differentials. Each tile holds a value, which is referenced upon selection, to detemine if, either, it is adjacent to the previous tile or is already included in the word.
+Both are considered valid, and are shown as approved selections via yellow highlighting; however, should a user's selection be considered invalid, the tile deactivates, effectively making invalid selections impossible.
+
+```js
+  isNextTo(letterNode, lastLetterNode) {
+    const differential = letterNode.value - lastLetterNode.value;
+    const standardDiffs = wordUtil.standardNodeDifferentials;
+    const cornerDiffs = wordUtil.cornerNodeDifferentials;
+    const sideDiffs = wordUtil.sideNodeDifferentials;
+
+    const isCornerNode = cornerDiffs[lastLetterNode.value] ? true : false;
+    const isSideNode = sideDiffs[lastLetterNode.value] ? true : false;
+
+    if (isCornerNode) {
+      if (cornerDiffs[lastLetterNode.value].includes(differential)) {
+        return true;
+      }
+    } else if (isSideNode) {
+      if (sideDiffs[lastLetterNode.value].includes(differential)) {
+        return true;
+      }
+    } else if (standardDiffs.includes(differential)) return true;
+
+    return false;
+  }
+```
+
+```js
+  isSelf(letterNode) {
+    const currentWord = this.letterNodes;
+
+    for (let i = 0; i < currentWord.length; i++) {
+      if (currentWord[i].value === letterNode.value) {
+        const backTrackedWord = currentWord.slice(0, i + 1);
+        const deSelectedWord = currentWord.slice(i);
+
+        this.deSelectLetters(deSelectedWord);
+        this.letterNodes = backTrackedWord;
+        return true;
+      }
+    }
+
+    return false;
+  }
+```
+
+![tileSelectionGif](./app/assets/readme_images/tileSelectionGif.gif)
+
 
