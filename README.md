@@ -1,7 +1,7 @@
 # Flabbergast
 
 ### [Play Flabbergast][play game]
-[play game]: playflabbergast.com
+[play game]: http://www.playflabbergast.com
 
 ![play](./app/assets/readme_images/flabbergastPlayDemoGif.gif)
 
