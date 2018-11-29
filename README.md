@@ -125,4 +125,55 @@ Both are considered valid, and are shown as approved selections via yellow highl
 
 ![tileSelectionGif](./app/assets/readme_images/tileSelectionGif.gif)
 
+----------------
+
+### Word Validation
+
+Once a `Word` is judged for validity, it's scored, and audio/visual indicators are activated. `setTimeout` is used for the visual indicator, with a 300 millisecond time lag, affording the necessary time for a clear indication of judgement without sacrificing a user's ability to quickly begin the next word.
+
+```js
+  isValidWord(word) {
+    word = wordUtil.toUpperCase(word);
+
+    const firstLetter = word[0];
+    const isValidLength = word.length > 2;
+    const hasNotBeenFound = !boardUtil
+      .foundWordsToArray()
+      .includes(`• ${word}`);
+
+    // saves query time if word doesn't meet length/uniqueness constraints
+    let isValidWord;
+    if (isValidLength && hasNotBeenFound) {
+      isValidWord = wordBank[firstLetter].includes(word);
+    }
+
+    this.submitWord(word, isValidWord);
+  }
+```
+
+```js
+  submitWord(word, wasValidWord) {
+    const selectedWord = boardUtil.getSelectedWordTiles(this.tileSet);
+
+    if (wasValidWord) {
+      this.music.playSuccessAudio();
+      this.awardPoints(word);
+
+      selectedWord.forEach(tile => {
+        tile.flashTileVerdict(true);
+      });
+    } else {
+      this.music.playRejectAudio();
+
+      selectedWord.forEach(tile => {
+        tile.flashTileVerdict(false);
+      });
+    }
+
+    setTimeout(this.toggleTileSelectStatus, 300);
+  }
+```
+
+![wordValidationGif](./app/assets/readme_images/wordValidationGif.gif)
+
 
