@@ -146,7 +146,8 @@ var Board = function () {
   }, {
     key: "generateRandomTiles",
     value: function generateRandomTiles() {
-      var shuffledTiles = this.shuffleTiles(tileUtil.newVersionTiles).slice();
+      var shuffledTiles = this.shuffleTiles(tileUtil.newVersionTiles);
+
       for (var i = 0; i < 16; i++) {
         var tile = shuffledTiles.pop();
         var randomLetter = tileUtil.sample(tile);
@@ -304,7 +305,7 @@ var Board = function () {
   }, {
     key: "awardPoints",
     value: function awardPoints(word) {
-      var pointsAwarded = word.length < 8 ? boardUtil.scoreTable[word.length] : boardUtil.scoreTable["longer"];
+      var pointsAwarded = word.length < 7 ? boardUtil.scoreTable[word.length] : boardUtil.scoreTable["longer"];
 
       var score = boardUtil.getScore();
 
@@ -1055,12 +1056,11 @@ var getSelectedWordTiles = exports.getSelectedWordTiles = function getSelectedWo
 };
 
 var scoreTable = exports.scoreTable = {
-  3: 8,
+  3: 5,
   4: 10,
-  5: 13,
-  6: 17,
-  7: 22,
-  longer: 30
+  5: 20,
+  6: 30,
+  longer: 45
 };
 
 var toggleStartButton = exports.toggleStartButton = function toggleStartButton(requestType) {
