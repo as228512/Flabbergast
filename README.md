@@ -1,14 +1,26 @@
-## Sample JS Project Proposal: Flabbergast - Clone variation of Boggle
+# Flabbergast
 
-### Background
+### [Play Flabbergast]
 
-Boggle is a word game played using a grid of lettered dice that players shuffle and then attempt to find words in sequences of adjacent letters.
+    
+
+### Game Information
+
+Flabbergast is a word game, played using a grid of lettered tiles, where players attempt to form words in sequences of adjacent letters.
 Some basic rules include...
 
-1) The board is shuffled upon player start
-2) The player has a set time to find as many adjacent word sequences as possible to claim the highest score.
-3) Word length determines point value.
-4) Words can only be scored once per round and a letter may only be used once within an attempted word.
+1) Words must be unique (not previously found) and at least 3 letters long.
+2) Horizontal, diagonal, and vertical moves are all legal.
+3) Players may only select a tile once, per word (duplicate letters are okay).
+4) Word length determines point value...
+
+    | Word Length | Point Value |
+    |:-----------:|:-----------:|
+    |      3      |      5      |
+    |      4      |      10     |
+    |      5      |      20     |
+    |      6      |      30     |
+    |      6+     |      45     |
 
 ### Functionality & MVP  
 
