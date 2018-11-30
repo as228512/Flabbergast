@@ -159,14 +159,6 @@ var Board = function () {
         tiles[i].innerHTML = randomLetter;
         this.tileSet.push(new _tile2.default(tiles[i], randomLetter));
       }
-      // for (let i = 0; i < 16; i++) {
-      //   const tile = shuffledTiles.pop();
-      //   const randomLetter = tileUtil.sample(tile);
-      //   const tileEl = document.getElementById(`t${i}`);
-      //
-      //   tileEl.innerHTML = randomLetter;
-      //   this.tileSet.push(new Tile(tileEl));
-      // }
     }
   }, {
     key: "activateTiles",
@@ -193,7 +185,7 @@ var Board = function () {
     key: "handleTileClick",
     value: function handleTileClick(e) {
       var currentWord = this.word ? this.word.currentWord : null;
-      var isStartOfWord = currentWord ? !Boolean(this.word.currentWord.length) : true;
+      var isStartOfWord = currentWord ? this.word.currentWord.length === 0 : true;
       var currentTile = this.tileSet.find(function (tile) {
         return tile.tileEl === e.target;
       });
@@ -224,15 +216,12 @@ var Board = function () {
       var isValidLength = word.length > 2;
       var hasNotBeenFound = !boardUtil.foundWordsToArray().includes("\u2022 " + word);
 
-      debugger;
-
       // saves query time if word doesn't meet length/uniqueness constraints
       var isValidWord = void 0;
       if (isValidLength && hasNotBeenFound) {
         isValidWord = _word_bank_util.wordBank[firstLetter].includes(word);
       }
 
-      debugger;
       this.submitWord(word, isValidWord);
     }
   }, {
@@ -240,13 +229,10 @@ var Board = function () {
     value: function submitWord(word, wasValidWord) {
       var _this3 = this;
 
-      debugger;
       var letterNodes = this.word.letterNodes;
       var selectedWord = this.tileSet.filter(function (tile) {
-        debugger;
         return _this3.word.letterNodes.includes(tile.tileEl);
       });
-      // const selectedWord = this.word.letterNodes;
 
       if (wasValidWord) {
         this.music.playSuccessAudio();
@@ -279,7 +265,7 @@ var Board = function () {
     value: function toggleTileSelectStatus() {
       var _this4 = this;
 
-      var isStartOfWord = this.word ? !Boolean(this.word.currentWord.length) : true;
+      var isStartOfWord = this.word ? this.word.currentWord.length === 0 : true;
 
       if (isStartOfWord) {
         //handles cases for user's first selection &
@@ -1025,7 +1011,6 @@ var Tile = function () {
     key: "flashTileVerdict",
     value: function flashTileVerdict(verdict) {
       this.tileEl.className = verdict ? "accepted" : "rejected";
-      debugger;
     }
   }, {
     key: "toggleSelectionStatus",
@@ -1499,15 +1484,6 @@ var cornerNodeDifferentials = exports.cornerNodeDifferentials = {
   13: [-4, -3, 1],
   16: [-1, -4, -5]
 };
-
-// export const toLowerCase = letterNodes => {
-//   return letterNodes.map(letterNode => {
-//     const isFirstLetter = letterNode.value === letterNodes[0].value;
-//     return isFirstLetter
-//       ? letterNode.innerHTML
-//       : letterNode.innerHTML.toLowerCase();
-//   });
-// };
 
 var toLowerCase = exports.toLowerCase = function toLowerCase(word) {
   return word.split("").map(function (char) {
