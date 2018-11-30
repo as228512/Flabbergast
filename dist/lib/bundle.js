@@ -549,14 +549,17 @@ var Game = function () {
         var nameField = gameUtil.getNameField();
 
         nameField.onclick = function () {
-          if (!gameUtil.isValidName(nameField.value)) nameField.value = "";
+          if (!gameUtil.isValidName(nameField.value).resp) nameField.value = "";
           nameField.id = "name-field";
         };
 
         submitButton.onclick = function (e) {
-          if (!gameUtil.isValidName(nameField.value)) {
+          var respObj = gameUtil.isValidName(nameField.value);
+          if (!respObj.resp) {
             e.preventDefault();
-            nameField.value = "Enter name here...";
+
+            if (respObj.err === "inValidName") nameField.value = "Enter name here...";else nameField.value = "Max length exceeded (10)";
+
             nameField.id = "name-field-error";
           } else _this2.handleSubmitClick(e, nameField.value);
         };
@@ -1156,8 +1159,10 @@ var getModelBackground = exports.getModelBackground = function getModelBackgroun
 
 var isValidName = exports.isValidName = function isValidName(name) {
   if (name === "" || name === "Name..." || name === "Enter name here...") {
-    return false;
-  } else return true;
+    return { err: "inValidName", resp: false };
+  } else if (name.length > 10) {
+    return { err: "nameLength", resp: false };
+  } else return { err: null, resp: true };
 };
 
 var leftList = {
