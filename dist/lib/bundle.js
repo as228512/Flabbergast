@@ -126,6 +126,7 @@ var Board = function () {
     this.tileSet = [];
     this.word = null;
     this.music = new _music2.default();
+    this.score = 0;
     this.toggleTileSelectStatus = this.toggleTileSelectStatus.bind(this);
     this.selectTile = this.selectTile.bind(this);
     this.handleTileClick = this.handleTileClick.bind(this);
@@ -243,6 +244,15 @@ var Board = function () {
       setTimeout(this.toggleTileSelectStatus, 300);
     }
   }, {
+    key: "awardPoints",
+    value: function awardPoints(word) {
+      var pointsAwarded = word.length < 7 ? boardUtil.scoreTable[word.length] : boardUtil.scoreTable["longer"];
+
+      boardUtil.getPointsField().innerHTML = "Score: " + (this.score += pointsAwarded);
+
+      this.appendWord(word);
+    }
+  }, {
     key: "toggleTileSelectStatus",
     value: function toggleTileSelectStatus() {
       var _this3 = this;
@@ -306,17 +316,6 @@ var Board = function () {
     value: function prepForNewWord() {
       boardUtil.resetCurrentWord();
       this.word.removeAllLetters();
-    }
-  }, {
-    key: "awardPoints",
-    value: function awardPoints(word) {
-      var pointsAwarded = word.length < 7 ? boardUtil.scoreTable[word.length] : boardUtil.scoreTable["longer"];
-
-      var score = boardUtil.getScore();
-
-      boardUtil.getPointsField().innerHTML = "Score: " + (score += pointsAwarded);
-
-      this.appendWord(word);
     }
   }, {
     key: "appendWord",
@@ -454,6 +453,7 @@ var Game = function () {
   }, {
     key: "gameOver",
     value: function gameOver() {
+      boardUtil.getPointsField().innerHTML = "Score: " + this.board.score;
       this.music.playGameOverAudio();
       this.stopTimer();
       this.board.deActivateTiles(true);
@@ -467,8 +467,10 @@ var Game = function () {
     key: "resetGame",
     value: function resetGame() {
       this.count = 3;
+      this.time = 90;
       this.currentDiag = 1;
       this.isLastDiag = false;
+      this.board.score = 0;
       this.board.deActivateTiles(true);
       this.music.stopMusic();
       this.resetTimer();
@@ -496,8 +498,6 @@ var Game = function () {
   }, {
     key: "tickTimer",
     value: function tickTimer() {
-      debugger;
-
       if (this.time === 0) {
         this.gameOver();
         return;
@@ -623,7 +623,7 @@ var Game = function () {
     key: "isHighScore",
     value: function isHighScore() {
       var highScores = this.highScores;
-      var playerScore = boardUtil.getScore();
+      var playerScore = this.board.score;
 
       for (var i = 0; i < highScores.length; i++) {
         if (Number(highScores[i].score) < playerScore) {
@@ -649,7 +649,7 @@ var Game = function () {
   }, {
     key: "setHighScore",
     value: function setHighScore(name) {
-      var score = boardUtil.getScore();
+      var score = this.board.score;
       this.highScores = this.highScores.slice(0, 4);
       this.highScores.push({ name: "" + name, score: "" + score });
       this.sortHighScores();
