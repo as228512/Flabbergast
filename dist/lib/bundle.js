@@ -385,7 +385,8 @@ var Game = function () {
 
     this.board = new _board2.default();
     this.music = new _music2.default();
-    this.time = gameUtil.getTimerField();
+    this.timerField = gameUtil.getTimerField();
+    this.time = gameUtil.getCurrentTime();
     this.database = firebase.database();
     this.highScores = this.retrieveHighScores();
     this.count = 3;
@@ -490,21 +491,21 @@ var Game = function () {
     key: "resetTimer",
     value: function resetTimer() {
       this.stopTimer();
-      this.time.innerHTML = "Time: 90";
+      this.timerField.innerHTML = "Time: 90";
     }
   }, {
     key: "tickTimer",
     value: function tickTimer() {
-      var time = gameUtil.getCurrentTime();
+      debugger;
 
-      if (time === 0) {
+      if (this.time === 0) {
         this.gameOver();
         return;
       }
 
-      time--;
+      this.time--;
 
-      this.time.innerHTML = "Time: " + time;
+      this.timerField.innerHTML = "Time: " + this.time;
     }
   }, {
     key: "toggleLeaderBoardModel",
