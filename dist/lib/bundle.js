@@ -130,6 +130,7 @@ var Board = function () {
     this.toggleTileSelectStatus = this.toggleTileSelectStatus.bind(this);
     this.selectTile = this.selectTile.bind(this);
     this.handleTileClick = this.handleTileClick.bind(this);
+    this.submitWord = this.submitWord.bind(this);
   }
 
   _createClass(Board, [{
@@ -149,15 +150,23 @@ var Board = function () {
     value: function generateRandomTiles() {
       //clones a new unique set of tiles from the master set for use
       var shuffledTiles = this.shuffleTiles(tileUtil.newVersionTiles).slice();
+      var tiles = document.getElementById("tiles").children;
 
       for (var i = 0; i < 16; i++) {
         var tile = shuffledTiles.pop();
         var randomLetter = tileUtil.sample(tile);
-        var tileEl = document.getElementById("t" + i);
 
-        tileEl.innerHTML = randomLetter;
-        this.tileSet.push(new _tile2.default(tileEl));
+        tiles[i].innerHTML = randomLetter;
+        this.tileSet.push(new _tile2.default(tiles[i], randomLetter));
       }
+      // for (let i = 0; i < 16; i++) {
+      //   const tile = shuffledTiles.pop();
+      //   const randomLetter = tileUtil.sample(tile);
+      //   const tileEl = document.getElementById(`t${i}`);
+      //
+      //   tileEl.innerHTML = randomLetter;
+      //   this.tileSet.push(new Tile(tileEl));
+      // }
     }
   }, {
     key: "activateTiles",
@@ -183,26 +192,28 @@ var Board = function () {
   }, {
     key: "handleTileClick",
     value: function handleTileClick(e) {
-      var currentWord = boardUtil.getCurrentWordField().innerHTML;
-      var isStartOfWord = boardUtil.isWordFieldEmpty();
-      var currentTileEl = e.target;
+      var currentWord = this.word ? this.word.currentWord : null;
+      var isStartOfWord = currentWord ? !Boolean(this.word.currentWord.length) : true;
+      var currentTile = this.tileSet.find(function (tile) {
+        return tile.tileEl === e.target;
+      });
 
       if (isStartOfWord) {
-        this.createNewWord(currentTileEl);
+        this.createNewWord(currentTile);
       } else {
         this.isValidWord(currentWord);
       }
     }
   }, {
     key: "createNewWord",
-    value: function createNewWord(tileEl) {
+    value: function createNewWord(tile) {
       this.toggleTileSelectStatus();
       this.word = new _word2.default();
-      var firstLetterNode = tileEl;
+      var firstLetterNode = tile.tileEl;
 
       firstLetterNode.className = "selected";
-      this.word.addLetter(firstLetterNode);
-      boardUtil.getCurrentWordField().innerHTML = firstLetterNode.innerHTML;
+      this.word.addLetter(tile);
+      boardUtil.getCurrentWordField().innerHTML = this.word.currentWord;
     }
   }, {
     key: "isValidWord",
@@ -213,18 +224,29 @@ var Board = function () {
       var isValidLength = word.length > 2;
       var hasNotBeenFound = !boardUtil.foundWordsToArray().includes("\u2022 " + word);
 
+      debugger;
+
       // saves query time if word doesn't meet length/uniqueness constraints
       var isValidWord = void 0;
       if (isValidLength && hasNotBeenFound) {
         isValidWord = _word_bank_util.wordBank[firstLetter].includes(word);
       }
 
+      debugger;
       this.submitWord(word, isValidWord);
     }
   }, {
     key: "submitWord",
     value: function submitWord(word, wasValidWord) {
-      var selectedWord = boardUtil.getSelectedWordTiles(this.tileSet);
+      var _this3 = this;
+
+      debugger;
+      var letterNodes = this.word.letterNodes;
+      var selectedWord = this.tileSet.filter(function (tile) {
+        debugger;
+        return _this3.word.letterNodes.includes(tile.tileEl);
+      });
+      // const selectedWord = this.word.letterNodes;
 
       if (wasValidWord) {
         this.music.playSuccessAudio();
@@ -255,14 +277,15 @@ var Board = function () {
   }, {
     key: "toggleTileSelectStatus",
     value: function toggleTileSelectStatus() {
-      var _this3 = this;
+      var _this4 = this;
 
-      var isStartOfWord = boardUtil.isWordFieldEmpty();
+      var isStartOfWord = this.word ? !Boolean(this.word.currentWord.length) : true;
+
       if (isStartOfWord) {
         //handles cases for user's first selection &
         //toggles on further selection highlighting
         this.tileSet.forEach(function (tile) {
-          tile.tileEl.addEventListener("mouseover", _this3.selectTile);
+          tile.tileEl.addEventListener("mouseover", _this4.selectTile);
           tile.toggleSelectionStatus(true);
         });
       } else {
@@ -270,7 +293,7 @@ var Board = function () {
 
         this.prepForNewWord();
         this.tileSet.forEach(function (tile) {
-          tile.tileEl.removeEventListener("mouseover", _this3.selectTile);
+          tile.tileEl.removeEventListener("mouseover", _this4.selectTile);
           tile.toggleSelectionStatus(false);
         });
 
@@ -280,32 +303,35 @@ var Board = function () {
   }, {
     key: "selectTile",
     value: function selectTile(e) {
-      var tileEl = e.target;
+      var currentTile = this.tileSet.find(function (tile) {
+        return tile.tileEl === e.target;
+      });
 
-      //checks proximity validity of new tileEl selection
-      if (this.word.isValidMove(tileEl)) {
+      //checks proximity validity of new tile selection
+      if (this.word.isValidMove(currentTile)) {
         this.word.letterNodes.forEach(function (tileEl) {
           tileEl.className = "selected";
         });
 
         //formats tail of word
-        var letters = wordUtil.toLowerCase(this.word.letterNodes);
+        var letters = wordUtil.toLowerCase(this.word.currentWord);
+        letters = letters.charAt(0).toUpperCase() + letters.slice(1);
 
-        boardUtil.getCurrentWordField().innerHTML = letters.join("");
+        boardUtil.getCurrentWordField().innerHTML = letters;
       } else {
-        this.word.rejectMove(tileEl);
-        this.disAllowClick(tileEl);
+        this.word.rejectMove(currentTile.tileEl);
+        this.disAllowClick(currentTile.tileEl);
       }
     }
   }, {
     key: "disAllowClick",
     value: function disAllowClick(tileEl) {
-      var _this4 = this;
+      var _this5 = this;
 
       tileEl.removeEventListener("mousedown", this.handleTileClick);
 
       var removeListener = function removeListener() {
-        tileEl.addEventListener("mousedown", _this4.handleTileClick);
+        tileEl.addEventListener("mousedown", _this5.handleTileClick);
         tileEl.removeEventListener("mouseout", removeListener);
       };
 
@@ -470,8 +496,8 @@ var Game = function () {
       this.time = 90;
       this.currentDiag = 1;
       this.isLastDiag = false;
-      this.board.score = 0;
       this.board.deActivateTiles(true);
+      this.board = new _board2.default();
       this.music.stopMusic();
       this.resetTimer();
       boardUtil.resetCurrentWord();
@@ -949,10 +975,11 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Tile = function () {
-  function Tile(tileEl) {
+  function Tile(tileEl, letter) {
     _classCallCheck(this, Tile);
 
     this.tileEl = tileEl;
+    this.letter = letter;
   }
 
   _createClass(Tile, [{
@@ -998,6 +1025,7 @@ var Tile = function () {
     key: "flashTileVerdict",
     value: function flashTileVerdict(verdict) {
       this.tileEl.className = verdict ? "accepted" : "rejected";
+      debugger;
     }
   }, {
     key: "toggleSelectionStatus",
@@ -1472,11 +1500,19 @@ var cornerNodeDifferentials = exports.cornerNodeDifferentials = {
   16: [-1, -4, -5]
 };
 
-var toLowerCase = exports.toLowerCase = function toLowerCase(letterNodes) {
-  return letterNodes.map(function (letterNode) {
-    var isFirstLetter = letterNode.value === letterNodes[0].value;
-    return isFirstLetter ? letterNode.innerHTML : letterNode.innerHTML.toLowerCase();
-  });
+// export const toLowerCase = letterNodes => {
+//   return letterNodes.map(letterNode => {
+//     const isFirstLetter = letterNode.value === letterNodes[0].value;
+//     return isFirstLetter
+//       ? letterNode.innerHTML
+//       : letterNode.innerHTML.toLowerCase();
+//   });
+// };
+
+var toLowerCase = exports.toLowerCase = function toLowerCase(word) {
+  return word.split("").map(function (char) {
+    return char.toLowerCase();
+  }).join("");
 };
 
 var toUpperCase = exports.toUpperCase = function toUpperCase(word) {
@@ -1958,17 +1994,18 @@ var Word = function () {
     _classCallCheck(this, Word);
 
     this.letterNodes = [];
+    this.currentWord = "";
   }
 
   _createClass(Word, [{
     key: "isValidMove",
-    value: function isValidMove(letterNode) {
+    value: function isValidMove(tile) {
       var lastLetterNode = this.letterNodes[this.letterNodes.length - 1];
-      var isSibling = this.isNextTo(letterNode, lastLetterNode);
-      var isSelf = this.isSelf(letterNode);
+      var isSibling = this.isNextTo(tile.tileEl, lastLetterNode);
+      var isSelf = this.isSelf(tile.tileEl);
 
       if (isSelf) return true;else if (isSibling) {
-        this.addLetter(letterNode);
+        this.addLetter(tile);
         return true;
       } else return false;
     }
@@ -2033,13 +2070,15 @@ var Word = function () {
     }
   }, {
     key: "addLetter",
-    value: function addLetter(letterNode) {
-      this.letterNodes.push(letterNode);
+    value: function addLetter(tile) {
+      this.letterNodes.push(tile.tileEl);
+      this.currentWord += tile.letter;
     }
   }, {
     key: "removeAllLetters",
     value: function removeAllLetters() {
       this.letterNodes = [];
+      this.currentWord = "";
     }
   }]);
 
