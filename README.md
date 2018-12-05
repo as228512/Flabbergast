@@ -39,7 +39,7 @@ This project was built with the following technologies:
 
 ### Tile Generation
 
-Each game, dom elements are fetched and assigned random letters, which are then fed to the `Tile` constructor and pushed into the `Board` held array, or `tileSet`, for future reference and manipulation.
+Each game, DOM elements are fetched and assigned random letters, which are then fed to the `Tile` constructor and pushed into the `Board` held array, or `tileSet`, for future reference and manipulation.
 
 ```js
    generateRandomTiles() {
@@ -56,7 +56,8 @@ Each game, dom elements are fetched and assigned random letters, which are then 
   }
 ```
 
-Each tile position is randomized via the modern (in-place) Fisher–Yates implementation.
+
+Each tile position is randomized via Durstenfeld's implementation of the [Fisher–Yates shuffle](https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm).
 
 ```js
    shuffleTiles(tileSet) {
