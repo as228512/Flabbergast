@@ -42,16 +42,16 @@ This project was built with the following technologies:
 Each game, DOM elements are fetched and assigned random letters, which are then fed to the `Tile` constructor and pushed into the `Board` held array, or `tileSet`, for future reference and manipulation.
 
 ```js
-   generateRandomTiles() {
-    const shuffledTiles = this.shuffleTiles(tileUtil.newVersionTiles);
+  generateRandomTiles() {
+    const shuffledTiles = this.shuffleTiles(tileUtil.newVersionTiles).slice();
+    const tiles = document.getElementById("tiles").children;
 
     for (let i = 0; i < 16; i++) {
       const tile = shuffledTiles.pop();
       const randomLetter = tileUtil.sample(tile);
-      const tileEl = document.getElementById(`t${i}`);
 
-      tileEl.innerHTML = randomLetter;
-      this.tileSet.push(new Tile(tileEl));
+      tiles[i].innerHTML = randomLetter;
+      this.tileSet.push(new Tile(tiles[i], randomLetter));
     }
   }
 ```
@@ -60,7 +60,7 @@ Each game, DOM elements are fetched and assigned random letters, which are then 
 Each tile position is randomized via Durstenfeld's implementation of the [Fisher–Yates shuffle](https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm).
 
 ```js
-   shuffleTiles(tileSet) {
+  shuffleTiles(tileSet) {
     for (let i = tileSet.length - 1; i > 0; i--) {
       let randomIdx = Math.floor(Math.random() * (i + 1));
       let temp = tileSet[i];
@@ -154,7 +154,10 @@ Once a `Word` is judged for validity, it's scored, and audio/visual indicators a
 
 ```js
   submitWord(word, wasValidWord) {
-    const selectedWord = boardUtil.getSelectedWordTiles(this.tileSet);
+    const letterNodes = this.word.letterNodes;
+    const selectedWord = this.tileSet.filter(tile => {
+      return this.word.letterNodes.includes(tile.tileEl);
+    });
 
     if (wasValidWord) {
       this.music.playSuccessAudio();
