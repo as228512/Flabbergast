@@ -2015,12 +2015,13 @@ var Word = function () {
 
       for (var i = 0; i < letterNodes.length; i++) {
         if (letterNodes[i].value === letterNode.value) {
-          var backTrackedWord = letterNodes.slice(0, i + 1);
-          var deSelectedWord = letterNodes.slice(i);
+          var reSelectedLetters = letterNodes.slice(0, i + 1);
+          var deSelectedLetters = letterNodes.slice(i);
 
-          this.deSelectLetters(deSelectedWord);
-          this.letterNodes = backTrackedWord;
-          this.reConstructWord(backTrackedWord);
+          this.deSelectLetters(deSelectedLetters);
+          // this.letterNodes = reSelectedLetters;
+          this.reConstructWord(reSelectedLetters);
+          debugger;
           return true;
         }
       }
@@ -2032,7 +2033,9 @@ var Word = function () {
     value: function reConstructWord(letterNodeArray) {
       var _this = this;
 
+      this.letterNodes = letterNodeArray;
       this.currentWord = "";
+
       letterNodeArray.forEach(function (letterNode) {
         _this.currentWord += letterNode.innerHTML;
       });
