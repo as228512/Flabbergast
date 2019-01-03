@@ -2019,9 +2019,7 @@ var Word = function () {
           var deSelectedLetters = letterNodes.slice(i);
 
           this.deSelectLetters(deSelectedLetters);
-          // this.letterNodes = reSelectedLetters;
           this.reConstructWord(reSelectedLetters);
-          debugger;
           return true;
         }
       }
