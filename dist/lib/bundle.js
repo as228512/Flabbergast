@@ -148,7 +148,6 @@ var Board = function () {
   }, {
     key: "generateRandomTiles",
     value: function generateRandomTiles() {
-      //clones a new unique set of tiles from the master set for use
       var shuffledTiles = this.shuffleTiles(tileUtil.newVersionTiles).slice();
       var tiles = document.getElementById("tiles").children;
 
@@ -2011,20 +2010,32 @@ var Word = function () {
   }, {
     key: "isSelf",
     value: function isSelf(letterNode) {
-      var currentWord = this.letterNodes;
+      var letterNodes = this.letterNodes;
+      var currentWord = this.currentWord;
 
-      for (var i = 0; i < currentWord.length; i++) {
-        if (currentWord[i].value === letterNode.value) {
-          var backTrackedWord = currentWord.slice(0, i + 1);
-          var deSelectedWord = currentWord.slice(i);
+      for (var i = 0; i < letterNodes.length; i++) {
+        if (letterNodes[i].value === letterNode.value) {
+          var backTrackedWord = letterNodes.slice(0, i + 1);
+          var deSelectedWord = letterNodes.slice(i);
 
           this.deSelectLetters(deSelectedWord);
           this.letterNodes = backTrackedWord;
+          this.reConstructWord(backTrackedWord);
           return true;
         }
       }
 
       return false;
+    }
+  }, {
+    key: "reConstructWord",
+    value: function reConstructWord(letterNodeArray) {
+      var _this = this;
+
+      this.currentWord = "";
+      letterNodeArray.forEach(function (letterNode) {
+        _this.currentWord += letterNode.innerHTML;
+      });
     }
   }, {
     key: "deSelectLetters",
