@@ -107,15 +107,16 @@ Both are considered valid, and are shown as approved selections via yellow highl
 
 ```js
   isSelf(letterNode) {
-    const currentWord = this.letterNodes;
+    const letterNodes = this.letterNodes;
+    const currentWord = this.currentWord;
 
-    for (let i = 0; i < currentWord.length; i++) {
-      if (currentWord[i].value === letterNode.value) {
-        const backTrackedWord = currentWord.slice(0, i + 1);
-        const deSelectedWord = currentWord.slice(i);
+    for (let i = 0; i < letterNodes.length; i++) {
+      if (letterNodes[i].value === letterNode.value) {
+        const reSelectedLetters = letterNodes.slice(0, i + 1);
+        const deSelectedLetters = letterNodes.slice(i);
 
-        this.deSelectLetters(deSelectedWord);
-        this.letterNodes = backTrackedWord;
+        this.deSelectLetters(deSelectedLetters);
+        this.reConstructWord(reSelectedLetters);
         return true;
       }
     }
